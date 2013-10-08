@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ParticleSystem">
+      <UniqueIdentifier>{c84d96ec-1f47-406b-a3d8-a2e14b0b9099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{989bff1e-2f98-4010-8446-dd927ab7b8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Assignment">
+      <UniqueIdentifier>{dc5df8fb-2c5f-481e-9859-c9dedc1ad6e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\ParticleSystem">
+      <UniqueIdentifier>{ee102483-32f7-45f7-8395-1bb0e22a57be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{2ded03f5-6a44-4f22-8bee-0ff542a4ec8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Assignment">
+      <UniqueIdentifier>{3b7b8cde-6aaf-4cac-847a-32761cc85ce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Header Files\ParticleSystem\Forces">
+      <UniqueIdentifier>{d2683f19-eafd-4ec3-8015-98451e9f0175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ParticleSystem\Collisions">
+      <UniqueIdentifier>{a9ff58da-1f74-49ff-a385-3b8e93d9065c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ParticleSystem\Integrators">
+      <UniqueIdentifier>{ad2093f4-2f64-4f7a-909d-5593f685d949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ParticleSystem\Constraints">
+      <UniqueIdentifier>{b9727eb2-7b95-46aa-b1e9-7b43c3e572a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ParticleSystem\Constraints">
+      <UniqueIdentifier>{cf9e78b3-f07a-42e2-aedf-b7a05c1c8167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ParticleSystem\Forces">
+      <UniqueIdentifier>{9ab5a30b-221e-4667-80af-ca3fd8ba62d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ParticleSystem\Collisions">
+      <UniqueIdentifier>{1569bca9-d3e7-4fd2-85a6-624e37acdac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ParticleSystem\Integrators">
+      <UniqueIdentifier>{9c0c3370-4d43-47c1-95ef-8be5cb9fcbea}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstrainedParticleSystem.cpp">
+      <Filter>Source Files\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Particle.cpp">
+      <Filter>Source Files\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ParticleSystem.cpp">
+      <Filter>Source Files\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsSystem.cpp">
+      <Filter>Source Files\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ControlPanel.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\glFuncs.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ParticleSystemUI.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Trackball.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UICallback.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WindowGLDisplay.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataManager.cpp">
+      <Filter>Source Files\Assignment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneGalileo.cpp">
+      <Filter>Source Files\Assignment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneSnow.cpp">
+      <Filter>Source Files\Assignment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneTinkertoy.cpp">
+      <Filter>Source Files\Assignment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CircleWireConstraint.cpp">
+      <Filter>Source Files\ParticleSystem\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollisionTest.cpp">
+      <Filter>Source Files\ParticleSystem\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstantForce.cpp">
+      <Filter>Source Files\ParticleSystem\Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Constraint.cpp">
+      <Filter>Source Files\ParticleSystem\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EulerIntegrator.cpp">
+      <Filter>Source Files\ParticleSystem\Integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MidpointIntegrator.cpp">
+      <Filter>Source Files\ParticleSystem\Integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Integrator.cpp">
+      <Filter>Source Files\ParticleSystem\Integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RungeKuttaIntegrator.cpp">
+      <Filter>Source Files\ParticleSystem\Integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Force.cpp">
+      <Filter>Source Files\ParticleSystem\Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DampingForce.cpp">
+      <Filter>Source Files\ParticleSystem\Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpringForce.cpp">
+      <Filter>Source Files\ParticleSystem\Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RigidJointConstraint.cpp">
+      <Filter>Source Files\ParticleSystem\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FixedDistanceConstraint.cpp">
+      <Filter>Source Files\ParticleSystem\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollisionAABB.cpp">
+      <Filter>Source Files\ParticleSystem\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollisionSphere.cpp">
+      <Filter>Source Files\ParticleSystem\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollisionPlane.cpp">
+      <Filter>Source Files\ParticleSystem\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneFountain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\ConstrainedParticleSystem.h">
+      <Filter>Header Files\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Particle.h">
+      <Filter>Header Files\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParticleSystem.h">
+      <Filter>Header Files\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PhysicsSystem.h">
+      <Filter>Header Files\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ControlPanel.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\glFuncs.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParticleSystemUI.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Trackball.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UICallback.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WindowGLDisplay.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DataManager.h">
+      <Filter>Header Files\Assignment</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneGalileo.h">
+      <Filter>Header Files\Assignment</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneSnow.h">
+      <Filter>Header Files\Assignment</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneTinkertoy.h">
+      <Filter>Header Files\Assignment</Filter>
+    </ClInclude>
+    <ClInclude Include="include\defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CircleWireConstraint.h">
+      <Filter>Header Files\ParticleSystem\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionTest.h">
+      <Filter>Header Files\ParticleSystem\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ConstantForce.h">
+      <Filter>Header Files\ParticleSystem\Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DampingForce.h">
+      <Filter>Header Files\ParticleSystem\Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EulerIntegrator.h">
+      <Filter>Header Files\ParticleSystem\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Integrator.h">
+      <Filter>Header Files\ParticleSystem\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MidpointIntegrator.h">
+      <Filter>Header Files\ParticleSystem\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RungeKuttaIntegrator.h">
+      <Filter>Header Files\ParticleSystem\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Force.h">
+      <Filter>Header Files\ParticleSystem\Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Constraint.h">
+      <Filter>Header Files\ParticleSystem\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FixedDistanceConstraint.h">
+      <Filter>Header Files\ParticleSystem\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RigidJointConstraint.h">
+      <Filter>Header Files\ParticleSystem\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpringForce.h">
+      <Filter>Header Files\ParticleSystem\Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionAABB.h">
+      <Filter>Header Files\ParticleSystem\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionSphere.h">
+      <Filter>Header Files\ParticleSystem\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionPlane.h">
+      <Filter>Header Files\ParticleSystem\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneFountain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D68DECE8-33F5-4148-AF91-228F38CD7337}</ProjectGuid>
+    <RootNamespace>particlesystem-app</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+    <ProjectName>particles</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;..\particlesystem\include;..\external;..\external\glm;..\external\fltk;..\external\glut;..\external\vl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FL_SHARED;WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>fltk2dlld.lib;fltk2dll_gld.lib;glu32.lib;opengl32.lib;comctl32.lib;wsock32.lib;vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\bin\particles_d.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\external\glm\lib;..\external\fltk\lib;..\external\glut\lib;..\external\vl\lib;..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <ForceFileOutput>
+      </ForceFileOutput>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>include;..\particlesystem\include;..\external;..\external\glm;..\external\fltk;..\external\glut;..\external\vl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FL_SHARED;WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>fltk2dll.lib;fltk2dll_gl.lib;glu32.lib;glut32.lib;opengl32.lib;comctl32.lib;wsock32.lib;vl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\bin\particles.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\external\glm\lib;..\external\fltk\lib;..\external\glut\lib;..\external\vl\lib;..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <ForceFileOutput>
+      </ForceFileOutput>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CollisionPlane.cpp" />
+    <ClCompile Include="src\ConstantForce.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\CircleWireConstraint.cpp" />
+    <ClCompile Include="src\CollisionAABB.cpp" />
+    <ClCompile Include="src\CollisionSphere.cpp" />
+    <ClCompile Include="src\CollisionTest.cpp" />
+    <ClCompile Include="src\ConstrainedParticleSystem.cpp" />
+    <ClCompile Include="src\Constraint.cpp" />
+    <ClCompile Include="src\DampingForce.cpp" />
+    <ClCompile Include="src\EulerIntegrator.cpp" />
+    <ClCompile Include="src\FixedDistanceConstraint.cpp" />
+    <ClCompile Include="src\Force.cpp" />
+    <ClCompile Include="src\Integrator.cpp" />
+    <ClCompile Include="src\MidpointIntegrator.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\PhysicsSystem.cpp" />
+    <ClCompile Include="src\RigidJointConstraint.cpp" />
+    <ClCompile Include="src\RungeKuttaIntegrator.cpp" />
+    <ClCompile Include="src\SceneFountain.cpp" />
+    <ClCompile Include="src\SpringForce.cpp" />
+    <ClCompile Include="src\ControlPanel.cpp" />
+    <ClCompile Include="src\glFuncs.cpp" />
+    <ClCompile Include="src\ParticleSystemUI.cpp" />
+    <ClCompile Include="src\Trackball.cpp" />
+    <ClCompile Include="src\UICallback.cpp" />
+    <ClCompile Include="src\WindowGLDisplay.cpp" />
+    <ClCompile Include="src\DataManager.cpp" />
+    <ClCompile Include="src\SceneGalileo.cpp" />
+    <ClCompile Include="src\SceneSnow.cpp" />
+    <ClCompile Include="src\SceneTinkertoy.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\CircleWireConstraint.h" />
+    <ClInclude Include="include\CollisionAABB.h" />
+    <ClInclude Include="include\CollisionPlane.h" />
+    <ClInclude Include="include\CollisionSphere.h" />
+    <ClInclude Include="include\CollisionTest.h" />
+    <ClInclude Include="include\ConstantForce.h" />
+    <ClInclude Include="include\ConstrainedParticleSystem.h" />
+    <ClInclude Include="include\Constraint.h" />
+    <ClInclude Include="include\DampingForce.h" />
+    <ClInclude Include="include\defines.h" />
+    <ClInclude Include="include\EulerIntegrator.h" />
+    <ClInclude Include="include\FixedDistanceConstraint.h" />
+    <ClInclude Include="include\Force.h" />
+    <ClInclude Include="include\Integrator.h" />
+    <ClInclude Include="include\MidpointIntegrator.h" />
+    <ClInclude Include="include\Particle.h" />
+    <ClInclude Include="include\ParticleSystem.h" />
+    <ClInclude Include="include\PhysicsSystem.h" />
+    <ClInclude Include="include\RigidJointConstraint.h" />
+    <ClInclude Include="include\RungeKuttaIntegrator.h" />
+    <ClInclude Include="include\SceneFountain.h" />
+    <ClInclude Include="include\SpringForce.h" />
+    <ClInclude Include="include\ControlPanel.h" />
+    <ClInclude Include="include\glFuncs.h" />
+    <ClInclude Include="include\ParticleSystemUI.h" />
+    <ClInclude Include="include\Trackball.h" />
+    <ClInclude Include="include\UICallback.h" />
+    <ClInclude Include="include\WindowGLDisplay.h" />
+    <ClInclude Include="include\DataManager.h" />
+    <ClInclude Include="include\SceneGalileo.h" />
+    <ClInclude Include="include\SceneSnow.h" />
+    <ClInclude Include="include\SceneTinkertoy.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

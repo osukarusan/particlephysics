@@ -11,3 +11,10 @@
 *.lai
 *.la
 *.a
+/bin
+/particlesystem/ipch
+/particlesystem/Debug
+/particlesystem/Release
+/external/fltk/lib
+/external/glut/lib
+/external/vl/lib
