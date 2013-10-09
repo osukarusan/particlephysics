@@ -15,7 +15,7 @@ public:
 	Particle(const Particle& p);
 	~Particle(void);
 
-	Vec3d pos;
+	Vec3d pos, prevPos;
 	Vec3d vel;
 	Vec3d force;
 	float mass;

@@ -106,10 +106,10 @@ void SceneFountain::update() {
 			Vec3d velN = dot(nor, p->vel)*nor;
 			Vec3d velT = p->vel - velN;
 			p->vel = kt*velT - kr*velN;
-			p->pos = pos + eps*nor;
+			p->pos = p->pos - (1 + kr)*(dot(nor, p->pos) - m_floor->getK())*nor;
 
-			// restart condition: collision with the floor and small velocity
-			if (nor[1] > 0 && p->vel[1] < 0.2*DataManager::mFountainHeight) {
+			// restart condition: small velocity
+			if (abs(p->vel[1]) < 0.2*DataManager::mFountainHeight) {
 				p->pos = Vec3d(0, DataManager::mFountainHeight, 0);
 				p->vel = Vec3d(random01() - 0.5, 0, 0.5*random01());
 			}

@@ -28,6 +28,8 @@ void RungeKuttaIntegrator::doStep(PhysicsSystem *system, float h) {
 	Vecd k4 = h*system->getDerivative();
 
 	Vecd x1 = x0 + (k1 + k4)/6.0 + (k2 + k3)/3.0;
+
+	system->setPreviousState(x0);
 	system->setState(x1);
 	system->setTime(t0 + h);
 

@@ -24,6 +24,8 @@ void MidpointIntegrator::doStep(PhysicsSystem *system, float h) {
 	
 	// take a step using fmid
 	Vecd x1 = x0 + h*fmid;
+
+	system->setPreviousState(x0);
 	system->setState(x1);
 	system->setTime (t0 + h);
 

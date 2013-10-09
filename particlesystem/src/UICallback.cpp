@@ -54,5 +54,6 @@ void Sim_cb(fltk::Widget *o, void *v){
 
 void Switch_cb(fltk::Widget *o, void *v){
 	DataManager::gCurrentScene = SceneType((int(DataManager::gCurrentScene) + 1)%NUM_SCENES);
+	DataManager::mUI->mControl->setScene(DataManager::gCurrentScene);
 	DataManager::gReset = true;
 }

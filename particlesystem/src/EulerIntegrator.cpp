@@ -14,6 +14,7 @@ void EulerIntegrator::doStep(PhysicsSystem *system, float h) {
 	Vecd x0 = system->getState();
 	Vecd dx = system->getDerivative();	
 	Vecd x1 = x0 + h*dx;
+	system->setPreviousState(x0);
 	system->setState(x1);
 	system->setTime(system->getTime() + h);
 

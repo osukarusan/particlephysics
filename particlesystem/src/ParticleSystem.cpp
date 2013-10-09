@@ -57,12 +57,20 @@ Vecd ParticleSystem::getDerivative() const {
 void ParticleSystem::setState(const Vecd& state) {
 
 	for (int i = 0; i < m_particles.size(); i++) {
-		m_particles[i]->pos[0] = state[6*i    ];
-		m_particles[i]->pos[1] = state[6*i + 1];
-		m_particles[i]->pos[2] = state[6*i + 2];
-		m_particles[i]->vel[0] = state[6*i + 3];
-		m_particles[i]->vel[1] = state[6*i + 4];
-		m_particles[i]->vel[2] = state[6*i + 5];
+		m_particles[i]->pos[0]  = state[6*i    ];
+		m_particles[i]->pos[1]  = state[6*i + 1];
+		m_particles[i]->pos[2]  = state[6*i + 2];
+		m_particles[i]->vel[0]  = state[6*i + 3];
+		m_particles[i]->vel[1]  = state[6*i + 4];
+		m_particles[i]->vel[2]  = state[6*i + 5];
 	}
 
+}
+
+void ParticleSystem::setPreviousState(const Vecd& state) {
+	for (int i = 0; i < m_particles.size(); i++) {
+		m_particles[i]->prevPos[0]  = state[6*i    ];
+		m_particles[i]->prevPos[1]  = state[6*i + 1];
+		m_particles[i]->prevPos[2]  = state[6*i + 2];
+	}
 }

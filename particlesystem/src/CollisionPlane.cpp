@@ -18,12 +18,16 @@ void CollisionPlane::getBoundingBox(Vec3d& min, Vec3d& max)
 	max = Vec3d( PS_INFINITE,  PS_INFINITE,  PS_INFINITE);
 }
 
-bool CollisionPlane::testCollision(const Particle* particle, double eps, 
+bool CollisionPlane::testCollision(const Particle* p, double eps, 
 								   Vec3d& pos, Vec3d& nor)
 {
-	double d = dot(particle->pos, m_normal) + m_k;
-	pos = particle->pos;  //TODO!!
+	double d = dot(p->pos, m_normal) + m_k;
+	
 	nor = m_normal;
+	Vec3d segment = p->pos - p->prevPos;
+	double lambda = (m_k - dot(nor, p->prevPos))/dot(nor, segment);
+	pos = p->prevPos + lambda*segment;
+
 	return d < eps;
 }
 

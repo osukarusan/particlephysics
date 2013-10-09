@@ -30,7 +30,6 @@ void onTimer(void *){
 
 	if (DataManager::gReset == true)
 	{
-		DataManager::mUI->mControl->setScene(DataManager::gCurrentScene);
 		if (DataManager::gLastScene != DataManager::gCurrentScene) {
 			DataManager::mUI->mGLWindow->resetCameraPosition();
 			DataManager::mInitExtraParticles.clear();

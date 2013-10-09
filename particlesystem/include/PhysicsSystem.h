@@ -14,6 +14,7 @@ public:
 	virtual Vecd getDerivative() const = 0;
 
 	virtual void setState(const Vecd& state) = 0;
+	virtual void setPreviousState(const Vecd& prev) = 0;
 
 	double getTime() const;
 	void   setTime(double t);

@@ -19,6 +19,8 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mDamp_in->hide();
 			this->mAddParticle_but->hide();
 			this->mAddFixedDist_but->hide();
+			this->mFountainParticles_sli->hide();
+			this->mFountainHeight_sli->hide();
 			break;
 		case SCENE_SNOW:
 			this->mHeight_sli->hide();
@@ -32,6 +34,8 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mDamp_in->hide();
 			this->mAddParticle_but->hide();
 			this->mAddFixedDist_but->hide();
+			this->mFountainParticles_sli->hide();
+			this->mFountainHeight_sli->hide();
 			this->mRestitution_in->value(0.8);
 			DataManager::mCoeffRestitution = 0.8;
 			break;
@@ -47,6 +51,8 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mDamp_in->hide();
 			this->mAddParticle_but->hide();
 			this->mAddFixedDist_but->hide();
+			this->mFountainParticles_sli->set_visible();
+			this->mFountainHeight_sli->set_visible();
 			this->mRestitution_in->value(0.25);
 			DataManager::mCoeffRestitution = 0.25;
 			break;
@@ -62,6 +68,8 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mDamp_in->set_visible();
 			this->mAddParticle_but->set_visible();
 			this->mAddFixedDist_but->set_visible();
+			this->mFountainParticles_sli->hide();
+			this->mFountainHeight_sli->hide();
 			break;
 		default: break;
 	}

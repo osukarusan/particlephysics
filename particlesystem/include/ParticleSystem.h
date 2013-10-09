@@ -19,6 +19,7 @@ public:
 	virtual Vecd getState()      const;
 	virtual Vecd getDerivative() const;
 	virtual void setState(const Vecd& state);
+	virtual void setPreviousState(const Vecd& prev);
 
 	Particle* getParticle(unsigned int i) const;
 	Force*    getForce   (unsigned int i) const;
