@@ -53,6 +53,12 @@ void onTimer(void *){
 			case SCENE_TINKERTOY:
 				DataManager::mSceneTinkertoy->init();
 				break;
+			case SCENE_ROPE:
+				DataManager::mSceneRope->init();
+				break;
+			case SCENE_CLOTH:
+				DataManager::mSceneCloth->init();
+				break;
 			default: break;
 		}
 		DataManager::gReset = false;
@@ -67,6 +73,8 @@ void onTimer(void *){
 		case SCENE_SNOW:		DataManager::mSceneSnow->update();		break;
 		case SCENE_FOUNTAIN:	DataManager::mSceneFountain->update();	break;
 		case SCENE_TINKERTOY:	DataManager::mSceneTinkertoy->update(); break;
+		case SCENE_ROPE:		DataManager::mSceneRope->update();		break;
+		case SCENE_CLOTH:		DataManager::mSceneCloth->update();		break;
 		}
 		// ---------  end simulation code-------------------
 	}
@@ -84,10 +92,14 @@ int main(int argc, char ** argv){
 	DataManager::mSceneSnow = new SceneSnow();
 	DataManager::mSceneFountain = new SceneFountain();
 	DataManager::mSceneTinkertoy = new SceneTinkertoy();
+	DataManager::mSceneRope = new SceneRope();
+	DataManager::mSceneCloth = new SceneCloth();
 	// ---------------------------------------------
 
-	DataManager::mSceneGalileo->init();
-	DataManager::mUI->mControl->setScene(SCENE_GALILEO);
+	DataManager::gCurrentScene = SCENE_ROPE;
+	DataManager::gLastScene    = SCENE_ROPE;
+	DataManager::mSceneRope->init();
+	DataManager::mUI->mControl->setScene(SCENE_ROPE);
 	
 	// show UI
 	fltk::visual(fltk::DOUBLE_BUFFER|fltk::INDEXED_COLOR);

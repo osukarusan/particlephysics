@@ -9,9 +9,11 @@ public:
 	PhysicsSystem(void);
 	~PhysicsSystem(void);
 
-	virtual int  getDimension()  const = 0;
-	virtual Vecd getState()      const = 0;
-	virtual Vecd getDerivative() const = 0;
+	virtual int  getDimension()			const = 0;
+	virtual Vecd getState()				const = 0;
+	virtual Vecd getPreviousState()		const = 0;
+	virtual Vecd getDerivative()		const = 0;
+	virtual Vecd getSecondDerivative()	const = 0;
 
 	virtual void setState(const Vecd& state) = 0;
 	virtual void setPreviousState(const Vecd& prev) = 0;

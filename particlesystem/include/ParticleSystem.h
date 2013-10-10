@@ -15,9 +15,12 @@ public:
 	ParticleSystem(void);
 	~ParticleSystem(void);
 
-	virtual int  getDimension()  const;
-	virtual Vecd getState()      const;
-	virtual Vecd getDerivative() const;
+	virtual int  getDimension()			const;
+	virtual Vecd getState()				const;
+	virtual Vecd getPreviousState()		const;
+	virtual Vecd getDerivative()		const;
+	virtual Vecd getSecondDerivative()	const;
+	
 	virtual void setState(const Vecd& state);
 	virtual void setPreviousState(const Vecd& prev);
 

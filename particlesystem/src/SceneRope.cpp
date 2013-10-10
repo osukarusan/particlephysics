@@ -1,31 +1,33 @@
-#include "SceneFountain.h"
+#include "SceneRope.h"
 #include "DataManager.h"
-#include <vector>
 
 
-SceneFountain::SceneFountain(void)
+SceneRope::SceneRope(void)
 {
 	m_system = NULL;
+	m_ball   = NULL;
+	m_floor  = NULL;
 	m_gravityForce = NULL;
-	m_floor = NULL;
-	m_ball = NULL;
 }
 
 
-SceneFountain::~SceneFountain(void)
+SceneRope::~SceneRope(void)
 {
 	if (m_system)		delete m_system;
-	if (m_gravityForce) delete m_gravityForce;
-	if (m_floor)		delete m_floor;
 	if (m_ball)			delete m_ball;
+	if (m_floor)		delete m_floor;
+	if (m_gravityForce) delete m_gravityForce;
+	for (unsigned int i = 0; i < m_springs.size(); i++) {
+		if (m_springs[i]) delete m_springs[i];
+	}
+	m_springs.clear();
 	m_system = NULL;
+	m_ball   = NULL;
 	m_gravityForce = NULL;
-	m_floor = NULL;
-	m_ball = NULL;
 }
 
-void SceneFountain::init(int numParticles) {
-	
+void SceneRope::init() {
+
 	if (m_system) delete m_system;
 	m_system = new ParticleSystem();
 
@@ -38,47 +40,41 @@ void SceneFountain::init(int numParticles) {
 
 	m_ball = new CollisionSphere();
 	m_ball->useInnerSide(false);
-	m_ball->setPosition(Vec3d(0, 0.25*DataManager::mFountainHeight, 0));
+	m_ball->setPosition(Vec3d(0.5, 1.5, 0));
 	m_ball->setRadius(0.25);
 
 	std::vector<Particle> vparts;
 	double eps = DataManager::mCollisionEpsilon;
-
-	for (int i = 0; i < numParticles; i++) {
-		Vec3d pp(0, DataManager::mFountainHeight, 0);
-		Vec3d pv(2*random01() - 1, -0.5*random01(), 2*random01() - 1);
-
+	for (int i = 0; i < DataManager::mRopeParticles; i++) {
+		Vec3d pp(double(i)/10.0, 3, 0);
+		Vec3d pv(0, 0, 0);
 		Particle* p = new Particle(pp, pv, 1.0);
-		p->color = Vec3f(0, 1.0, 1.0);
+		p->color = Vec3f(random01(), random01(), random01());
 		m_system->addParticle(p);
 		vparts.push_back(*p);
+
+		if (i > 0) {
+			m_gravityForce->addInfluencedParticle(p);
+
+			Particle* p2 = m_system->getParticle(i-1);
+			MassSpringForce* msf = new MassSpringForce();
+			msf->setParticlePair(p2, p);
+			msf->setRestingLength(len(p2->pos - p->pos));
+			msf->setSpringCoefficient(DataManager::mSpringK);
+			msf->setDampingCoefficient(DataManager::mSpringDamp);
+			m_springs.push_back(msf);
+			m_system->addForce(msf);
+		}
+		else {
+			p->mass = 1e32;
+		}
 	}
 
 	DataManager::mParticles.push_back(vparts);
-	DataManager::mCenter.push_back(Vec3d(0, 0.25*DataManager::mFountainHeight, 0));
-	DataManager::mBallCenter = Vec3d(0, 0.25*DataManager::mFountainHeight, 0);
 
-	m_totalTime = 0.0;
-	m_initParticles = 0;
 }
 
-void SceneFountain::update() {
-
-	// init some particles until all of them are active
-	int activeParts = std::min(m_system->getNumParticles(), m_initParticles + 10);
-	for (int i = m_initParticles; i < activeParts; i++) {
-		m_gravityForce->addInfluencedParticle(m_system->getParticle(i));
-	}
-	for (int i = activeParts; i < m_system->getNumParticles(); i++) {
-		m_system->getParticle(i)->pos = Vec3d(0, DataManager::mFountainHeight, 0);
-	}
-	m_initParticles = activeParts;
-
-	// update ball position
-	Vec3d ballPos = m_ball->getPosition();
-	ballPos[0] = 0.5*std::sin(m_totalTime*5);
-	m_ball->setPosition(ballPos);
-	DataManager::mBallCenter = ballPos;
+void SceneRope::update() {
 
 	// integration step
 	m_integrator.doStep(m_system, DataManager::mTimeStep);
@@ -107,12 +103,6 @@ void SceneFountain::update() {
 			Vec3d velT = p->vel - velN;
 			p->vel = kt*velT - kr*velN;
 			p->pos = p->pos - (1 + kr)*(dot(nor, p->pos) + m_floor->getK())*nor + eps*nor;
-
-			// restart condition: small velocity
-			if (abs(p->vel[1]) < 0.2*DataManager::mFountainHeight) {
-				p->pos = Vec3d(0, DataManager::mFountainHeight, 0);
-				p->vel = Vec3d(random01() - 0.5, 0, 0.5*random01());
-			}
 		}
 	}
 
@@ -122,9 +112,7 @@ void SceneFountain::update() {
 		vparts.push_back(*m_system->getParticle(i));
 	}
 	DataManager::mParticles.push_back(vparts);
-	DataManager::mCenter.push_back(DataManager::mBallCenter);
-
-	m_totalTime += DataManager::mTimeStep;
+	
+	//m_totalTime += DataManager::mTimeStep;
 
 }
-

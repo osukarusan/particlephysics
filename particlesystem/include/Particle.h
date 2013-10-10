@@ -16,7 +16,7 @@ public:
 	~Particle(void);
 
 	Vec3d pos, prevPos;
-	Vec3d vel;
+	Vec3d vel, prevVel;
 	Vec3d force;
 	float mass;
 

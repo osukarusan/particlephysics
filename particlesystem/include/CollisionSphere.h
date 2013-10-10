@@ -24,14 +24,14 @@ public:
 
 private:
 
-	Vec3d	m_position;
+	Vec3d	m_center;
 	double  m_radius;
 	bool	m_inner;
 
 };
 
 inline Vec3d CollisionSphere::getPosition() const {
-	return m_position;
+	return m_center;
 }
 
 inline double CollisionSphere::getRadius() const {
@@ -39,7 +39,7 @@ inline double CollisionSphere::getRadius() const {
 }
 
 inline void CollisionSphere::setPosition(const Vec3d &p) {
-	m_position = p;
+	m_center = p;
 }
 
 inline void CollisionSphere::setRadius(double r) {
@@ -47,7 +47,7 @@ inline void CollisionSphere::setRadius(double r) {
 }
 
 inline void CollisionSphere::move(const Vec3d &v) {
-	m_position += v;
+	m_center += v;
 }
 
 inline void CollisionSphere::useInnerSide(bool inner) {

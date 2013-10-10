@@ -5,6 +5,7 @@
 #include "EulerIntegrator.h"
 #include "RungeKuttaIntegrator.h"
 #include "MidpointIntegrator.h"
+#include "VerletIntegrator.h"
 
 class SceneGalileo
 {
@@ -26,7 +27,6 @@ private:
 	EulerIntegrator      m_Euler;
 	//MidpointIntegrator   m_Midpoint;
 	RungeKuttaIntegrator m_RungeKutta;
-
 
 };
 

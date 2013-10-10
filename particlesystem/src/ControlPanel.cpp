@@ -21,6 +21,9 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mAddFixedDist_but->hide();
 			this->mFountainParticles_sli->hide();
 			this->mFountainHeight_sli->hide();
+			this->mRopeParticles_sli->hide();
+			this->mSpringK_in->hide();
+			this->mSpringDamp_in->hide();
 			break;
 		case SCENE_SNOW:
 			this->mHeight_sli->hide();
@@ -36,6 +39,9 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mAddFixedDist_but->hide();
 			this->mFountainParticles_sli->hide();
 			this->mFountainHeight_sli->hide();
+			this->mRopeParticles_sli->hide();
+			this->mSpringK_in->hide();
+			this->mSpringDamp_in->hide();
 			this->mRestitution_in->value(0.8);
 			DataManager::mCoeffRestitution = 0.8;
 			break;
@@ -53,6 +59,9 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mAddFixedDist_but->hide();
 			this->mFountainParticles_sli->set_visible();
 			this->mFountainHeight_sli->set_visible();
+			this->mRopeParticles_sli->hide();
+			this->mSpringK_in->hide();
+			this->mSpringDamp_in->hide();
 			this->mRestitution_in->value(0.25);
 			DataManager::mCoeffRestitution = 0.25;
 			break;
@@ -70,8 +79,33 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mAddFixedDist_but->set_visible();
 			this->mFountainParticles_sli->hide();
 			this->mFountainHeight_sli->hide();
+			this->mRopeParticles_sli->hide();
+			this->mSpringK_in->hide();
+			this->mSpringDamp_in->hide();
 			break;
-		default: break;
+		case SCENE_ROPE:
+		case SCENE_CLOTH:
+			this->mHeight_sli->hide();
+			this->mParticles_sli->hide();
+			this->mCube_radio->hide();
+			this->mBall_radio->hide();
+			this->mPartCollision_check->hide();
+			this->mRestitution_in->set_visible();	
+			this->mParticleRad_in->set_visible();
+			this->mColor_but->hide();
+			this->mDamp_in->hide();
+			this->mAddParticle_but->hide();
+			this->mAddFixedDist_but->hide();
+			this->mFountainParticles_sli->hide();
+			this->mFountainHeight_sli->hide();
+			this->mRopeParticles_sli->set_visible();
+			this->mSpringK_in->set_visible();
+			this->mSpringDamp_in->set_visible();
+			this->mRestitution_in->value(0.1);
+			DataManager::mCoeffRestitution = 0.1;
+			break;
+		default: 
+			break;
 	}
 	mControlWindow->redraw();
 }
@@ -148,6 +182,18 @@ void ControlPanel::cb_mFountainParticles_sli(fltk::ValueSlider* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mFountainParticles_sli_i(o,v);
 }
 
+inline void ControlPanel::cb_mRopeParticles_sli_i(fltk::ValueSlider* o, void*) {
+  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mRopeParticles = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mRopeParticles_sli(fltk::ValueSlider* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mRopeParticles_sli_i(o,v);
+}
+
 inline void ControlPanel::cb_mPartCollision_check_i(fltk::CheckButton* o, void*) {
   DataManager::mParticleColl = o->value();
   DataManager::gReset = true;
@@ -213,6 +259,32 @@ inline void ControlPanel::cb_mDamp_in_i(fltk::ValueInput* o, void*) {
 }
 void ControlPanel::cb_mDamp_in(fltk::ValueInput* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mDamp_in_i(o,v);
+}
+
+
+inline void ControlPanel::cb_mSpringK_in_i(fltk::ValueInput* o, void*) {
+  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mSpringK = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mSpringK_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mSpringK_in_i(o,v);
+}
+
+
+inline void ControlPanel::cb_mSpringDamp_in_i(fltk::ValueInput* o, void*) {
+  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mSpringDamp = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mSpringDamp_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mSpringDamp_in_i(o,v);
 }
 
 inline void ControlPanel::cb_mAddParticle_but_i(fltk::Button*, void*) {
@@ -406,6 +478,40 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
+	{fltk::ValueSlider* o = mRopeParticles_sli = new fltk::ValueSlider(200, 5, 307, 18, "Particles");
+      o->type(fltk::ValueSlider::TICK_ABOVE);
+	  o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+      o->range(10, 50);
+      o->step(1);
+	  o->value(30);
+      o->callback((fltk::Callback*)cb_mRopeParticles_sli);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	
+	{fltk::ValueInput* o = mSpringK_in = new fltk::ValueInput(200, 30, 80, 18, "K_spring");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0.0,100000.0);
+      o->step(1000);
+	  o->value(10000.0);
+      o->callback((fltk::Callback*)cb_mSpringK_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	
+	{fltk::ValueInput* o = mSpringDamp_in = new fltk::ValueInput(360, 30, 80, 18, "K_damp");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0.0,100000.0);
+      o->step(1000);
+	  o->value(10.0);
+      o->callback((fltk::Callback*)cb_mSpringDamp_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+
 	{fltk::RadioButton* o = mCube_radio = new fltk::RadioButton(177, 30, 32, 18, "Cube");
 	  o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);

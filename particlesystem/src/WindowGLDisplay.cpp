@@ -133,13 +133,16 @@ void WindowGLDisplay::render()
 	else if (DataManager::gCurrentScene == SCENE_FOUNTAIN) {
 		glTranslatef(0.0f, -0.5f*DataManager::mFountainHeight, -DataManager::mFountainHeight);
 	}
+	else if (DataManager::gCurrentScene == SCENE_ROPE) {
+		glTranslatef(0, -1.5, 0);
+	}
 
 	// curr frame to be displayed
 	int currFrame = DataManager::mUI->mControl->getCurrentFrame();
 
 	// ------------------------------ your drawing code starts here  --------------------------------
 	
-	std::vector<Particle> particles;
+	std::vector<Particle>& particles = DataManager::mParticles[DataManager::mParticles.size()-1];
 	Vec3d center(0,0,0);
 
 	if (DataManager::mUI->mSim_but->value()) {				     // during simulation
@@ -149,8 +152,7 @@ void WindowGLDisplay::render()
 	} else if (currFrame < DataManager::mParticles.size()) {	// during playback
 		particles = DataManager::mParticles[currFrame];
 		if (DataManager::gCurrentScene == SCENE_SNOW)     center = DataManager::mCenter[currFrame];
-		if (DataManager::gCurrentScene == SCENE_FOUNTAIN) 
-			center = DataManager::mCenter[currFrame];
+		if (DataManager::gCurrentScene == SCENE_FOUNTAIN) center = DataManager::mCenter[currFrame];
 	}
 	
 	// draw particles
@@ -160,6 +162,7 @@ void WindowGLDisplay::render()
 		case SCENE_SNOW:      prad = DataManager::mCollisionEpsilon; break;
 		case SCENE_FOUNTAIN:  prad = DataManager::mCollisionEpsilon; break;
 		case SCENE_TINKERTOY: prad = 0.075;  break;
+		case SCENE_ROPE:      prad = DataManager::mCollisionEpsilon; break;
 	}
 	for (int i = 0; i < particles.size(); i++) {
 		glColor3f(1.0, 0.0, 0.0);
@@ -174,7 +177,7 @@ void WindowGLDisplay::render()
 		else
 			glColor3f(1.0f, 1.0f, 1.0f);
 
-		glutSolidSphere(prad, 16, 16);
+		glutSolidSphere(prad, 8, 8);
 		glPopMatrix();
 	}
 
@@ -216,7 +219,37 @@ void WindowGLDisplay::render()
 		glTranslatef(center[0], center[1], center[2]);
 		glRotatef(90, 1, 0, 0);
 		glutWireSphere(0.25, 16, 16);
-		glRotatef(-90, 1, 0, 0);
+		glPopMatrix();
+
+		glColor3f(1, 1, 0);
+		glBegin(GL_QUADS);
+			glVertex3f(-4.0f, 0.0f, -4.0f);
+			glVertex3f(-4.0f, 0.0f,  4.0f);
+			glVertex3f( 4.0f, 0.0f,  4.0f);
+			glVertex3f( 4.0f, 0.0f, -4.0f);
+		glEnd();
+
+		glEnable(GL_LIGHTING);
+	}
+	else if (DataManager::gCurrentScene == SCENE_ROPE) {
+		glDisable(GL_LIGHTING);
+		
+		glLineWidth(1.0f);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glBegin(GL_LINES);
+		for (unsigned int i = 1; i < particles.size(); i++) {
+			glVertex3f(particles[i-1].pos[0], particles[i-1].pos[1], particles[i-1].pos[2]);
+			glVertex3f(particles[i  ].pos[0], particles[i  ].pos[1], particles[i  ].pos[2]);
+		}
+		glEnd();
+		glLineWidth(1.0f);
+		
+		glColor3f(1, 0, 0);
+		glPushMatrix();
+		Vec3d sbc = DataManager::mSpringBall;
+		glTranslatef(sbc[0], sbc[1], sbc[2]);
+		glRotatef(90, 1, 0, 0);
+		glutWireSphere(0.25, 16, 16);
 		glPopMatrix();
 
 		glColor3f(1, 1, 0);

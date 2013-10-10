@@ -140,7 +140,8 @@ void SceneSnow::updateVolumeShake() {
 		if (m_boundingVolume->testCollision(p, eps, pos, nor)) {
 			Vec3d velN = dot(nor, p->vel)*nor;
 			Vec3d velT = p->vel - velN;
-			p->vel = velT - velN + 0.1*m_volumeMovement/DataManager::mTimeStep; 
+			p->vel = velT - velN + 0.1*m_volumeMovement/DataManager::mTimeStep;
+			p->pos = pos + eps*nor;
 		}
 	}
 

@@ -23,6 +23,11 @@ int	   DataManager::mFountainParticles = 250;
 double DataManager::mFountainHeight    = 3.0f;
 Vec3d  DataManager::mBallCenter		   = Vec3d(0, 0.5, 0);
 
+int	   DataManager::mRopeParticles = 30;
+double DataManager::mSpringK       = 10000.0f;
+double DataManager::mSpringDamp    = 10.0f;
+Vec3d  DataManager::mSpringBall	   = Vec3d(0.5, 1.5, 0);
+
 Vec3d  DataManager::mCircleWireCenter = Vec3d(0,0,0);
 double DataManager::mCircleWireRadius = 1.0;
 Vec3d  DataManager::mMouse3Dpos = Vec3d(0,0,0);
@@ -38,6 +43,8 @@ SceneGalileo*	DataManager::mSceneGalileo = NULL;
 SceneSnow*		DataManager::mSceneSnow = NULL;
 SceneFountain*	DataManager::mSceneFountain = NULL;
 SceneTinkertoy*	DataManager::mSceneTinkertoy = NULL;
+SceneRope*		DataManager::mSceneRope = NULL;
+SceneCloth*		DataManager::mSceneCloth = NULL;
 
 Vec3d  DataManager::mVolumeCenter = Vec3d(0,0,0);
 

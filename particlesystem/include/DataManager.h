@@ -8,8 +8,12 @@
 #include "SceneSnow.h"
 #include "SceneFountain.h"
 #include "SceneTinkertoy.h"
+#include "SceneRope.h"
+#include "SceneCloth.h"
 
-enum SceneType { SCENE_GALILEO, SCENE_SNOW, SCENE_FOUNTAIN, SCENE_TINKERTOY, NUM_SCENES };
+
+enum SceneType { SCENE_GALILEO, SCENE_SNOW,		SCENE_FOUNTAIN,		SCENE_TINKERTOY, 
+				 SCENE_ROPE,	SCENE_CLOTH,	NUM_SCENES };
 
 
 class DataManager{
@@ -45,6 +49,12 @@ public:
 	static double mFountainHeight;
 	static Vec3d  mBallCenter;
 
+	// Rope
+	static int    mRopeParticles;
+	static double mSpringK;
+	static double mSpringDamp;
+	static Vec3d  mSpringBall;
+
 	// Tinkertoy
 	static Vec3d  mCircleWireCenter;
 	static double mCircleWireRadius;
@@ -63,7 +73,8 @@ public:
 	static SceneSnow*		mSceneSnow;
 	static SceneFountain*	mSceneFountain;
 	static SceneTinkertoy*	mSceneTinkertoy;
-	
+	static SceneRope*		mSceneRope;
+	static SceneCloth*		mSceneCloth;
 
 	static std::vector<std::vector<Particle> > mParticles;
 	static std::vector<Vec3d> mCenter;

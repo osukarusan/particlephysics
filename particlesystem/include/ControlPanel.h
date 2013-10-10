@@ -54,6 +54,12 @@ private:
 	static void cb_mFountainParticles_sli(fltk::ValueSlider*,void*);
 
 public:
+	fltk::ValueSlider *mRopeParticles_sli;
+private:
+	inline void cb_mRopeParticles_sli_i(fltk::ValueSlider*,void*);
+	static void cb_mRopeParticles_sli(fltk::ValueSlider*,void*);
+
+public:
 	fltk::CheckButton *mPartCollision_check;
 private:
 	inline void cb_mPartCollision_check_i(fltk::CheckButton*,void*);
@@ -90,6 +96,18 @@ public:
 private:
 	inline void cb_mDamp_in_i(fltk::ValueInput*,void*);
 	static void cb_mDamp_in(fltk::ValueInput*,void*);
+
+public:
+	fltk::ValueInput *mSpringK_in;
+private:
+	inline void cb_mSpringK_in_i(fltk::ValueInput*,void*);
+	static void cb_mSpringK_in(fltk::ValueInput*,void*);
+
+public:
+	fltk::ValueInput *mSpringDamp_in;
+private:
+	inline void cb_mSpringDamp_in_i(fltk::ValueInput*,void*);
+	static void cb_mSpringDamp_in(fltk::ValueInput*,void*);
 
 public:
 	fltk::Button *mAddParticle_but;
