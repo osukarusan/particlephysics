@@ -7,7 +7,7 @@ class DampingForce : public Force
 {
 public:
 	DampingForce(void);
-	~DampingForce(void);
+	virtual ~DampingForce(void);
 
 	virtual void apply();
 

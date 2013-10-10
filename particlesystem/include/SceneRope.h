@@ -19,6 +19,8 @@ public:
 	void init();
 	void update();
 
+	void moveBall(const Vec3d& d);
+
 private:
 
 	ParticleSystem*			m_system;

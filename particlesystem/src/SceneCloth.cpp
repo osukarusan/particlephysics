@@ -18,3 +18,7 @@ void SceneCloth::update() {
 
 }
 
+void SceneCloth::moveBall(const Vec3d& d) {
+	//m_ball->move(d);
+}
+

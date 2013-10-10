@@ -15,7 +15,6 @@ SceneFountain::SceneFountain(void)
 SceneFountain::~SceneFountain(void)
 {
 	if (m_system)		delete m_system;
-	if (m_gravityForce) delete m_gravityForce;
 	if (m_floor)		delete m_floor;
 	if (m_ball)			delete m_ball;
 	m_system = NULL;

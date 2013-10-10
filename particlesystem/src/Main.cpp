@@ -35,6 +35,27 @@ void onTimer(void *){
 			DataManager::mInitExtraParticles.clear();
 			DataManager::mInitFixDistConstraints.clear();
 			DataManager::gLastScene = DataManager::gCurrentScene;
+			switch (DataManager::gCurrentScene) 
+			{
+				case SCENE_GALILEO:		delete DataManager::mSceneGalileo;
+										DataManager::mSceneGalileo = new SceneGalileo();	
+										break;
+				case SCENE_SNOW:		delete DataManager::mSceneSnow;
+										DataManager::mSceneSnow = new SceneSnow();	
+										break;
+				case SCENE_FOUNTAIN:	delete DataManager::mSceneFountain;
+										DataManager::mSceneFountain = new SceneFountain();	
+										break;
+				case SCENE_TINKERTOY:	delete DataManager::mSceneTinkertoy;
+										DataManager::mSceneTinkertoy = new SceneTinkertoy();	
+										break;
+				case SCENE_ROPE:		delete DataManager::mSceneRope;
+										DataManager::mSceneRope = new SceneRope();	
+										break;
+				case SCENE_CLOTH:		delete DataManager::mSceneCloth;
+										DataManager::mSceneCloth = new SceneCloth();	
+										break;
+			}
 		}
 		DataManager::mParticles.clear();
 		DataManager::mCenter.clear();

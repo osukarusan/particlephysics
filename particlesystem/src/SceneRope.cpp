@@ -16,10 +16,6 @@ SceneRope::~SceneRope(void)
 	if (m_system)		delete m_system;
 	if (m_ball)			delete m_ball;
 	if (m_floor)		delete m_floor;
-	if (m_gravityForce) delete m_gravityForce;
-	for (unsigned int i = 0; i < m_springs.size(); i++) {
-		if (m_springs[i]) delete m_springs[i];
-	}
 	m_springs.clear();
 	m_system = NULL;
 	m_ball   = NULL;
@@ -40,7 +36,7 @@ void SceneRope::init() {
 
 	m_ball = new CollisionSphere();
 	m_ball->useInnerSide(false);
-	m_ball->setPosition(Vec3d(0.5, 1.5, 0));
+	m_ball->setPosition(DataManager::mSpringBall);
 	m_ball->setRadius(0.25);
 
 	std::vector<Particle> vparts;
@@ -115,4 +111,9 @@ void SceneRope::update() {
 	
 	//m_totalTime += DataManager::mTimeStep;
 
+}
+
+void SceneRope::moveBall(const Vec3d& d) {
+	m_ball->move(d);
+	DataManager::mSpringBall = m_ball->getPosition();
 }

@@ -10,7 +10,7 @@ class Force
 public:
 
 	Force(void);
-	~Force(void);
+	virtual ~Force(void);
 
 	virtual void apply() = 0;
 

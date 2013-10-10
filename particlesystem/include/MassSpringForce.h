@@ -8,7 +8,7 @@ class MassSpringForce : public Force
 
 public:
 	MassSpringForce(void);
-	~MassSpringForce(void);
+	virtual ~MassSpringForce(void);
 
 	virtual void apply();
 

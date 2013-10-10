@@ -8,7 +8,7 @@ class SpringForce : public Force
 
 public:
 	SpringForce(void);
-	~SpringForce(void);
+	virtual ~SpringForce(void);
 
 	virtual void apply();
 

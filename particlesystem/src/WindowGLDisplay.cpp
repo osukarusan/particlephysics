@@ -142,7 +142,7 @@ void WindowGLDisplay::render()
 
 	// ------------------------------ your drawing code starts here  --------------------------------
 	
-	std::vector<Particle>& particles = DataManager::mParticles[DataManager::mParticles.size()-1];
+	std::vector<Particle> particles;
 	Vec3d center(0,0,0);
 
 	if (DataManager::mUI->mSim_but->value()) {				     // during simulation
@@ -213,8 +213,8 @@ void WindowGLDisplay::render()
 	{
 		glDisable(GL_LIGHTING);
 		glLineWidth(1.0);
+		
 		glColor3f(1, 0, 0);
-
 		glPushMatrix();
 		glTranslatef(center[0], center[1], center[2]);
 		glRotatef(90, 1, 0, 0);
@@ -244,7 +244,11 @@ void WindowGLDisplay::render()
 		glEnd();
 		glLineWidth(1.0f);
 		
-		glColor3f(1, 0, 0);
+		
+		if (mPicking)
+			glColor3f(0, 1, 0);
+		else
+			glColor3f(1, 0, 0);
 		glPushMatrix();
 		Vec3d sbc = DataManager::mSpringBall;
 		glTranslatef(sbc[0], sbc[1], sbc[2]);
@@ -345,7 +349,7 @@ void WindowGLDisplay::render()
 
 
 
-int WindowGLDisplay::handle(int event)
+int WindowGLDisplay::handle(int eventType)
 {  
 	Vec3d tempPos;
 	float xtrans, ytrans;
@@ -355,7 +359,7 @@ int WindowGLDisplay::handle(int event)
 	mMouse[1] = (mWinHeight >> 1) - fltk::event_y();
 
 	int nValidHandle = 0;
-	switch(event){
+	switch(eventType){
 
 		case fltk::KEY:
 			break;
@@ -394,7 +398,7 @@ int WindowGLDisplay::handle(int event)
 			}else
 				mLockState = false;
 
-			if(fltk::event_button() == 1){
+			if(fltk::event_button() == 1){						// left click
 				if(fltk::get_key_state(fltk::LeftCtrlKey))
 					mWhichClick = 1;
 				else if(fltk::get_key_state(fltk::LeftAltKey))
@@ -403,14 +407,14 @@ int WindowGLDisplay::handle(int event)
 					mWhichClick = 0;
 			}
 
-			if (mWhichClick == 0){	
+			if (mWhichClick == 0){		// left click
 				if(mShiftState)
 					mRotatingXY = true;
 
 				mXstart = mMouse[0];
 				mYstart = mMouse[1];
 
-			}else if(fltk::event_button() == 2 || mWhichClick == 1){
+			} else if(fltk::event_button() == 2 || mWhichClick == 1){ //middle click
 				if(mShiftState){
 					mTranslating = true;
 				}
@@ -422,14 +426,16 @@ int WindowGLDisplay::handle(int event)
 				}
 				mXstart = mMouse[0];
 				mYstart = mMouse[1];
-			}else if(fltk::event_button() == 3 || mWhichClick == 2){
+			}else if(fltk::event_button() == 3 || mWhichClick == 2){ // right click
 				if(mShiftState){
 					mZooming = true; 
 				}
 				else {
 					// temp code
-					mPicking = DataManager::gCurrentScene == SCENE_SNOW;
-					draw();
+					mPicking = DataManager::gCurrentScene == SCENE_SNOW
+						|| DataManager::gCurrentScene == SCENE_ROPE
+						|| DataManager::gCurrentScene == SCENE_CLOTH;
+					redraw();
 				}
 				mXstart = mMouse[0];
 				mYstart = mMouse[1]; 
@@ -598,6 +604,25 @@ int WindowGLDisplay::handle(int event)
 				mYstart = mMouse[1];
 				redraw();
 			}
+			else if (mPicking && !DataManager::mUI->mSim_but->value() && 
+					 DataManager::mUI->mControl->getCurrentFrame() == 0 &&
+					(DataManager::gCurrentScene == SCENE_ROPE || DataManager::gCurrentScene == SCENE_CLOTH))
+			{
+				mTranslateX += (mMouse[0] - mXstart);
+				mTranslateY += (mMouse[1] - mYstart);
+				Mat4d tempRot;
+				mTrackball.GetCurrentRotation(tempRot);
+				tempRot = inv(tempRot);
+				Vec4d tempTrans = tempRot * Vec4d(mMouse[0] - mXstart, mMouse[1] - mYstart, 0, 1);
+				if (DataManager::gCurrentScene == SCENE_ROPE)
+					DataManager::mSceneRope->moveBall(0.05*Vec3d(tempTrans[0], tempTrans[1], tempTrans[2]));
+				else if (DataManager::gCurrentScene == SCENE_CLOTH) 
+					DataManager::mSceneCloth->moveBall(0.05*Vec3d(tempTrans[0], tempTrans[1], tempTrans[2]));
+				mXstart = mMouse[0];
+				mYstart = mMouse[1];
+				DataManager::gReset = true;
+				redraw();
+			}
 			else if (mPicking && DataManager::gCurrentScene == SCENE_TINKERTOY) {
 				GLdouble modelMatrix[16];
 				GLdouble projMatrix[16];
@@ -661,7 +686,7 @@ int WindowGLDisplay::handle(int event)
 			break;
 
 		default:
-			return 0;
+			return 1;
 	}
 
 	return 1;

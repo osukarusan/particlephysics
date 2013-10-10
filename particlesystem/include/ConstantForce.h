@@ -9,7 +9,7 @@ class ConstantForce : public Force
 
 public:
 	ConstantForce(void);
-	~ConstantForce(void);
+	virtual ~ConstantForce(void);
 
 	virtual void apply();
 

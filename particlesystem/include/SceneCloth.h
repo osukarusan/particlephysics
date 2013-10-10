@@ -11,9 +11,11 @@ public:
 
 	SceneCloth(void);
 	~SceneCloth(void);
-	
+
 	void init();
 	void update();
+	
+	void moveBall(const Vec3d& d);
 
 private:
 
