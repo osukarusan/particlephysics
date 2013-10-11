@@ -133,7 +133,7 @@ void WindowGLDisplay::render()
 	else if (DataManager::gCurrentScene == SCENE_FOUNTAIN) {
 		glTranslatef(0.0f, -0.5f*DataManager::mFountainHeight, -DataManager::mFountainHeight);
 	}
-	else if (DataManager::gCurrentScene == SCENE_ROPE) {
+	else if (DataManager::gCurrentScene == SCENE_ROPE || DataManager::gCurrentScene == SCENE_CLOTH) {
 		glTranslatef(0, -1.5, 0);
 	}
 
@@ -163,6 +163,7 @@ void WindowGLDisplay::render()
 		case SCENE_FOUNTAIN:  prad = DataManager::mCollisionEpsilon; break;
 		case SCENE_TINKERTOY: prad = 0.075;  break;
 		case SCENE_ROPE:      prad = DataManager::mCollisionEpsilon; break;
+		case SCENE_CLOTH:     prad = DataManager::mCollisionEpsilon; break;
 	}
 	for (int i = 0; i < particles.size(); i++) {
 		glColor3f(1.0, 0.0, 0.0);
@@ -231,15 +232,46 @@ void WindowGLDisplay::render()
 
 		glEnable(GL_LIGHTING);
 	}
-	else if (DataManager::gCurrentScene == SCENE_ROPE) {
+	else if (DataManager::gCurrentScene == SCENE_ROPE || DataManager::gCurrentScene == SCENE_CLOTH) {
 		glDisable(GL_LIGHTING);
 		
 		glLineWidth(1.0f);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glBegin(GL_LINES);
-		for (unsigned int i = 1; i < particles.size(); i++) {
-			glVertex3f(particles[i-1].pos[0], particles[i-1].pos[1], particles[i-1].pos[2]);
-			glVertex3f(particles[i  ].pos[0], particles[i  ].pos[1], particles[i  ].pos[2]);
+		if (DataManager::gCurrentScene == SCENE_ROPE) {
+			for (unsigned int i = 1; i < particles.size(); i++) {
+				glVertex3f(particles[i-1].pos[0], particles[i-1].pos[1], particles[i-1].pos[2]);
+				glVertex3f(particles[i  ].pos[0], particles[i  ].pos[1], particles[i  ].pos[2]);
+			}
+		}
+		else {
+			unsigned int N = DataManager::mRopeParticles;
+			for (int i = 1; i < N; i++) {
+				for (int j = 1; j < N; j++) {
+					Particle& p0 = particles[i*N + j];
+					Particle& pl = particles[(i-1)*N + j];
+					Particle& pu = particles[i*N + j - 1];
+					Particle& pd = particles[(i-1)*N + j - 1];
+					glVertex3f(pl.pos[0], pl.pos[1], pl.pos[2]);
+					glVertex3f(p0.pos[0], p0.pos[1], p0.pos[2]);
+					glVertex3f(pu.pos[0], pu.pos[1], pu.pos[2]);
+					glVertex3f(p0.pos[0], p0.pos[1], p0.pos[2]);
+					glVertex3f(pd.pos[0], pd.pos[1], pd.pos[2]);
+					glVertex3f(p0.pos[0], p0.pos[1], p0.pos[2]);
+				}
+			}
+			for (int i = 1; i < N; i++) {
+				Particle& p1 = particles[i*N];
+				Particle& p2 = particles[(i-1)*N];
+				glVertex3f(p1.pos[0], p1.pos[1], p1.pos[2]);
+				glVertex3f(p2.pos[0], p2.pos[1], p2.pos[2]);
+			}
+			for (int i = 1; i < N; i++) {
+				Particle& p1 = particles[i];
+				Particle& p2 = particles[i-1];
+				glVertex3f(p1.pos[0], p1.pos[1], p1.pos[2]);
+				glVertex3f(p2.pos[0], p2.pos[1], p2.pos[2]);
+			}
 		}
 		glEnd();
 		glLineWidth(1.0f);

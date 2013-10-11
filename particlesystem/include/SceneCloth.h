@@ -3,7 +3,11 @@
 
 #include "ParticleSystem.h"
 #include "VerletIntegrator.h"
+#include "RungeKuttaIntegrator.h"
 #include "CollisionSphere.h"
+#include "CollisionPlane.h"
+#include "ConstantForce.h"
+#include "MassSpringForce.h"
 
 class SceneCloth
 {
@@ -21,6 +25,11 @@ private:
 
 	ParticleSystem*		m_system;
 	VerletIntegrator    m_integrator;
+	
+	CollisionSphere*	m_ball;
+	CollisionPlane*		m_floor;
+	ConstantForce*		m_gravityForce;
+	std::vector<MassSpringForce*> m_springs;
 
 
 };

@@ -16,7 +16,6 @@ SceneRope::~SceneRope(void)
 	if (m_system)		delete m_system;
 	if (m_ball)			delete m_ball;
 	if (m_floor)		delete m_floor;
-	m_springs.clear();
 	m_system = NULL;
 	m_ball   = NULL;
 	m_gravityForce = NULL;
@@ -58,7 +57,6 @@ void SceneRope::init() {
 			msf->setRestingLength(len(p2->pos - p->pos));
 			msf->setSpringCoefficient(DataManager::mSpringK);
 			msf->setDampingCoefficient(DataManager::mSpringDamp);
-			m_springs.push_back(msf);
 			m_system->addForce(msf);
 		}
 		else {

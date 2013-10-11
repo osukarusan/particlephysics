@@ -153,17 +153,17 @@
     <ClCompile Include="src\SceneFountain.cpp">
       <Filter>Source Files\Assignment</Filter>
     </ClCompile>
-    <ClCompile Include="src\VerletIntegrator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SceneRope.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\MassSpringForce.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ParticleSystem\Forces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VerletIntegrator.cpp">
+      <Filter>Source Files\ParticleSystem\Integrators</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneCloth.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Assignment</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneRope.cpp">
+      <Filter>Source Files\Assignment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,17 +263,17 @@
     <ClInclude Include="include\SceneFountain.h">
       <Filter>Header Files\Assignment</Filter>
     </ClInclude>
-    <ClInclude Include="include\VerletIntegrator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\SceneRope.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\MassSpringForce.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assignment</Filter>
     </ClInclude>
     <ClInclude Include="include\SceneCloth.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assignment</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MassSpringForce.h">
+      <Filter>Header Files\ParticleSystem\Forces</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VerletIntegrator.h">
+      <Filter>Header Files\ParticleSystem\Integrators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
