@@ -36,7 +36,7 @@ void SceneRope::init() {
 	m_ball = new CollisionSphere();
 	m_ball->useInnerSide(false);
 	m_ball->setPosition(DataManager::mSpringBall);
-	m_ball->setRadius(0.25);
+	m_ball->setRadius(DataManager::mSpringBallRadius);
 
 	std::vector<Particle> vparts;
 	double eps = DataManager::mCollisionEpsilon;

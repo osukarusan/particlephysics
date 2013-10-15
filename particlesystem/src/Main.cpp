@@ -25,7 +25,7 @@ void onTimer(void *){
 
 	if( DataManager::mUI->mControl->isPlaying()){
 		recordFrames();
-		DataManager::mUI->mControl->advanceFrame();
+		DataManager::mUI->mControl->advanceFrame(DataManager::mFrameSkip);
 	}
 
 	if (DataManager::gReset == true)

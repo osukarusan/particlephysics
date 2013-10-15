@@ -26,3 +26,16 @@ void MassSpringForce::apply() {
 	m_p2->force -= sforce;
 
 }
+
+void MassSpringForce::correctPosition() {
+
+	Vec3d  dir  = m_p2->pos - m_p1->pos;
+	double dist = len(dir);
+	normalise(dir);
+
+	double excess = dist - m_L;
+	double totalM = m_p1->mass + m_p2->mass;
+	m_p1->pos += (m_p2->mass/totalM)*excess*dir;
+	m_p2->pos -= (m_p1->mass/totalM)*excess*dir; 
+
+}

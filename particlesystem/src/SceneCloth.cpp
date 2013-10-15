@@ -23,11 +23,11 @@ SceneCloth::~SceneCloth(void)
 }
 
 
-MassSpringForce* createSpring(Particle* p1, Particle* p2) {
+MassSpringForce* createSpring(Particle* p1, Particle* p2, double multiplier = 1.0) {
 	MassSpringForce* msf = new MassSpringForce();
 	msf->setParticlePair(p2, p1);
 	msf->setRestingLength(len(p2->pos - p1->pos));
-	msf->setSpringCoefficient(DataManager::mSpringK);
+	msf->setSpringCoefficient(DataManager::mSpringK*multiplier);
 	msf->setDampingCoefficient(DataManager::mSpringDamp);
 	return msf;
 }
@@ -48,7 +48,7 @@ void SceneCloth::init() {
 	m_ball = new CollisionSphere();
 	m_ball->useInnerSide(false);
 	m_ball->setPosition(DataManager::mSpringBall);
-	m_ball->setRadius(0.25);
+	m_ball->setRadius(DataManager::mSpringBallRadius);
 	
 	int N = DataManager::mRopeParticles;
 	std::vector<Particle> vparts;
@@ -71,29 +71,37 @@ void SceneCloth::init() {
 		}
 	}
 
+	m_springs.clear();
 	for (int i = 1; i < N - 1; i++) {
 		for (int j = 1; j < N - 1; j++) {
 			Particle* p = m_system->getParticle(i*N + j);
-
-			// stretch
-			m_system->addForce(createSpring(p, m_system->getParticle((i-1)*N + j)));
-			m_system->addForce(createSpring(p, m_system->getParticle((i+1)*N + j)));
-			m_system->addForce(createSpring(p, m_system->getParticle(i*N + j - 1)));
-			m_system->addForce(createSpring(p, m_system->getParticle(i*N + j + 1)));
-
-			// shear
-			m_system->addForce(createSpring(p, m_system->getParticle((i-1)*N + j - 1)));
-			m_system->addForce(createSpring(p, m_system->getParticle((i-1)*N + j + 1)));
-			m_system->addForce(createSpring(p, m_system->getParticle((i+1)*N + j - 1)));
-			m_system->addForce(createSpring(p, m_system->getParticle((i+1)*N + j + 1)));
+			double multiplier = 1.0;
 
 			// bend
-			if (i >= 2)		m_system->addForce(createSpring(p, m_system->getParticle((i-2)*N + j)));
-			if (i < N-2)	m_system->addForce(createSpring(p, m_system->getParticle((i+2)*N + j)));
-			if (j >= 2)		m_system->addForce(createSpring(p, m_system->getParticle(i*N + j - 2)));
-			if (j < N-2)	m_system->addForce(createSpring(p, m_system->getParticle(i*N + j + 2)));
+			if (i >= 2)		m_springs.push_back(createSpring(p, m_system->getParticle((i-2)*N + j)));
+			else			multiplier *= 2.0;
+			if (i < N-2)	m_springs.push_back(createSpring(p, m_system->getParticle((i+2)*N + j)));
+			else			multiplier *= 2.0;
+			if (j >= 2)		m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j - 2)));
+			else			multiplier *= 2.0;
+			if (j < N-2)	m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j + 2)));
+			else			multiplier *= 2.0;
+
+			// stretch
+			m_springs.push_back(createSpring(p, m_system->getParticle((i-1)*N + j), multiplier));
+			m_springs.push_back(createSpring(p, m_system->getParticle((i+1)*N + j), multiplier));
+			m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j - 1), multiplier));
+			m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j + 1), multiplier));
+
+			// shear
+			m_springs.push_back(createSpring(p, m_system->getParticle((i-1)*N + j - 1), multiplier));
+			m_springs.push_back(createSpring(p, m_system->getParticle((i-1)*N + j + 1), multiplier));
+			m_springs.push_back(createSpring(p, m_system->getParticle((i+1)*N + j - 1), multiplier));
+			m_springs.push_back(createSpring(p, m_system->getParticle((i+1)*N + j + 1), multiplier));
 		}
 	}
+	for (unsigned int i = 0; i < m_springs.size(); i++)
+		m_system->addForce(m_springs[i]);
 
 	DataManager::mParticles.push_back(vparts);
 
@@ -103,6 +111,11 @@ void SceneCloth::update() {
 	
 	// integration step
 	m_integrator.doStep(m_system, DataManager::mTimeStep);
+	
+	// position correction
+	for (int iter = 0; iter < 3; iter++)
+		for (unsigned int i = 0; i < m_springs.size(); i++)
+			m_springs[i]->correctPosition();
 
 	// collision detection and response
 	double kr  = DataManager::mCoeffRestitution;
@@ -130,7 +143,7 @@ void SceneCloth::update() {
 			p->pos = p->pos - (1 + kr)*(dot(nor, p->pos) + m_floor->getK())*nor + eps*nor;
 		}
 	}
-
+	
 	// update data manager (needed for replay)
 	std::vector<Particle> vparts;
 	for (int i = 0; i < m_system->getNumParticles(); i++) {

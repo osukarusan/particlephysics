@@ -22,6 +22,8 @@ public:
 	double getDampingCoefficient() const;
 	double getRestingLength()	   const;
 
+	void correctPosition();
+
 private:
 
 	Particle *m_p1;

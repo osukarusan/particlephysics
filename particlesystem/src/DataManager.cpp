@@ -11,6 +11,7 @@ double DataManager::mGravityValue       = 9.81;
 double DataManager::mCoeffRestitution   = 0.8;
 double DataManager::mTangentialFriction = 0.8;
 double DataManager::mCollisionEpsilon   = 0.016;
+int	   DataManager::mFrameSkip          = 1;
 
 double DataManager::mInitialHeight = 80.0;
 
@@ -23,10 +24,11 @@ int	   DataManager::mFountainParticles = 250;
 double DataManager::mFountainHeight    = 3.0f;
 Vec3d  DataManager::mBallCenter		   = Vec3d(0, 0.5, 0);
 
-int	   DataManager::mRopeParticles = 30;
-double DataManager::mSpringK       = 10000.0f;
-double DataManager::mSpringDamp    = 10.0f;
-Vec3d  DataManager::mSpringBall	   = Vec3d(0.5, 1.5, 0);
+int	   DataManager::mRopeParticles    = 30;
+double DataManager::mSpringK          = 1000.0f;
+double DataManager::mSpringDamp       = 10.0f;
+Vec3d  DataManager::mSpringBall	      = Vec3d(0.5, 1.5, 0);
+double DataManager::mSpringBallRadius = 0.5;
 
 Vec3d  DataManager::mCircleWireCenter = Vec3d(0,0,0);
 double DataManager::mCircleWireRadius = 1.0;

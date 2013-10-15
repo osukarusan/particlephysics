@@ -178,7 +178,13 @@ void WindowGLDisplay::render()
 		else
 			glColor3f(1.0f, 1.0f, 1.0f);
 
-		glutSolidSphere(prad, 8, 8);
+		if (DataManager::gCurrentScene != SCENE_CLOTH) {
+			glutSolidSphere(prad, 8, 8);
+		}
+		else {
+			glutSolidSphere(prad, 3, 3);
+		}
+
 		glPopMatrix();
 	}
 
@@ -233,6 +239,18 @@ void WindowGLDisplay::render()
 		glEnable(GL_LIGHTING);
 	}
 	else if (DataManager::gCurrentScene == SCENE_ROPE || DataManager::gCurrentScene == SCENE_CLOTH) {
+		
+		if (mPicking)
+			glColor3f(0, 1, 0);
+		else
+			glColor3f(1, 0, 0);
+		glPushMatrix();
+		Vec3d sbc = DataManager::mSpringBall;
+		glTranslatef(sbc[0], sbc[1], sbc[2]);
+		glRotatef(90, 1, 0, 0);
+		glutSolidSphere(DataManager::mSpringBallRadius, 16, 16);
+		glPopMatrix();
+		
 		glDisable(GL_LIGHTING);
 		
 		glLineWidth(1.0f);
@@ -276,18 +294,6 @@ void WindowGLDisplay::render()
 		glEnd();
 		glLineWidth(1.0f);
 		
-		
-		if (mPicking)
-			glColor3f(0, 1, 0);
-		else
-			glColor3f(1, 0, 0);
-		glPushMatrix();
-		Vec3d sbc = DataManager::mSpringBall;
-		glTranslatef(sbc[0], sbc[1], sbc[2]);
-		glRotatef(90, 1, 0, 0);
-		glutWireSphere(0.25, 16, 16);
-		glPopMatrix();
-
 		glColor3f(1, 1, 0);
 		glBegin(GL_QUADS);
 			glVertex3f(-4.0f, 0.0f, -4.0f);
@@ -647,9 +653,9 @@ int WindowGLDisplay::handle(int eventType)
 				tempRot = inv(tempRot);
 				Vec4d tempTrans = tempRot * Vec4d(mMouse[0] - mXstart, mMouse[1] - mYstart, 0, 1);
 				if (DataManager::gCurrentScene == SCENE_ROPE)
-					DataManager::mSceneRope->moveBall(0.05*Vec3d(tempTrans[0], tempTrans[1], tempTrans[2]));
+					DataManager::mSceneRope->moveBall(0.025*Vec3d(tempTrans[0], tempTrans[1], tempTrans[2]));
 				else if (DataManager::gCurrentScene == SCENE_CLOTH) 
-					DataManager::mSceneCloth->moveBall(0.05*Vec3d(tempTrans[0], tempTrans[1], tempTrans[2]));
+					DataManager::mSceneCloth->moveBall(0.025*Vec3d(tempTrans[0], tempTrans[1], tempTrans[2]));
 				mXstart = mMouse[0];
 				mYstart = mMouse[1];
 				DataManager::gReset = true;

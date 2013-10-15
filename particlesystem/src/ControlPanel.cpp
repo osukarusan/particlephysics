@@ -24,6 +24,7 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mRopeParticles_sli->hide();
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
+			this->mSpringBallRad_in->hide();
 			break;
 		case SCENE_SNOW:
 			this->mHeight_sli->hide();
@@ -42,6 +43,7 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mRopeParticles_sli->hide();
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
+			this->mSpringBallRad_in->hide();
 			this->mRestitution_in->value(0.8);
 			DataManager::mCoeffRestitution = 0.8;
 			break;
@@ -62,6 +64,7 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mRopeParticles_sli->hide();
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
+			this->mSpringBallRad_in->hide();
 			this->mRestitution_in->value(0.25);
 			DataManager::mCoeffRestitution = 0.25;
 			break;
@@ -82,6 +85,7 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mRopeParticles_sli->hide();
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
+			this->mSpringBallRad_in->hide();
 			break;
 		case SCENE_ROPE:
 		case SCENE_CLOTH:
@@ -101,6 +105,7 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mRopeParticles_sli->set_visible();
 			this->mSpringK_in->set_visible();
 			this->mSpringDamp_in->set_visible();
+			this->mSpringBallRad_in->set_visible();
 			this->mRestitution_in->value(0.1);
 			DataManager::mCoeffRestitution = 0.1;
 			break;
@@ -287,6 +292,19 @@ void ControlPanel::cb_mSpringDamp_in(fltk::ValueInput* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mSpringDamp_in_i(o,v);
 }
 
+
+inline void ControlPanel::cb_mSpringBallRad_in_i(fltk::ValueInput* o, void*) {
+  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mSpringBallRadius = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mSpringBallRad_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mSpringBallRad_in_i(o,v);
+}
+
 inline void ControlPanel::cb_mAddParticle_but_i(fltk::Button*, void*) {
 	if (this->mAddParticle_but->value()) {
 		DataManager::mMouseTool = DataManager::MT_ADD_PARTICLE;
@@ -377,6 +395,17 @@ void ControlPanel::cb_mPlay_but(fltk::Button* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mPlay_but_i(o,v);
 }
 
+inline void ControlPanel::cb_mFrameStep_inp_i(fltk::ValueInput* o, void*) {
+  int current = (int)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mFrameSkip = current;
+}
+void ControlPanel::cb_mFrameStep_inp(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFrameStep_inp_i(o,v);
+}
+
 inline void ControlPanel::cb_mForward_but_i(fltk::Button*, void*) {
   advanceFrame((int)mFrameStep_inp->value());
 }
@@ -417,7 +446,7 @@ ControlPanel::ControlPanel() {
 	{fltk::ValueInput* o = mGravity_in = new fltk::ValueInput(47, 5, 80, 18, "Gravity");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
-	  o->range(0,9.81);
+	  o->range(0,20);
       o->step(0.01);
 	  o->value(9.81);
       o->callback((fltk::Callback*)cb_mGravity_in);
@@ -489,25 +518,33 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	
-	{fltk::ValueInput* o = mSpringK_in = new fltk::ValueInput(200, 30, 80, 18, "K_spring");
+	{fltk::ValueInput* o = mSpringK_in = new fltk::ValueInput(155, 30, 70, 18, "K");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0.0,100000.0);
       o->step(1000);
-	  o->value(10000.0);
+	  o->value(DataManager::mSpringK);
       o->callback((fltk::Callback*)cb_mSpringK_in);
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	
-	{fltk::ValueInput* o = mSpringDamp_in = new fltk::ValueInput(360, 30, 80, 18, "K_damp");
+	{fltk::ValueInput* o = mSpringDamp_in = new fltk::ValueInput(290, 30, 70, 18, "K_d");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0.0,100000.0);
       o->step(1000);
-	  o->value(10.0);
+	  o->value(DataManager::mSpringDamp);
       o->callback((fltk::Callback*)cb_mSpringDamp_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	{fltk::ValueInput* o = mSpringBallRad_in = new fltk::ValueInput(430, 30, 70, 18, "Rad");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0.0,1);
+      o->step(0.05);
+	  o->value(DataManager::mSpringBallRadius);
+      o->callback((fltk::Callback*)cb_mSpringBallRad_in);
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
@@ -537,14 +574,14 @@ ControlPanel::ControlPanel() {
 	{fltk::ValueInput* o = mRestitution_in = new fltk::ValueInput(540, 5, 80, 18, "kr");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
-	  o->range(0,1.0);
+	  o->range(0,2.0);
       o->step(0.01);
 	  o->value(0.80);
       o->callback((fltk::Callback*)cb_mRestitution_in);
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueInput* o = mParticleRad_in = new fltk::ValueInput(540, 30, 80, 18, "rad");
+	{fltk::ValueInput* o = mParticleRad_in = new fltk::ValueInput(540, 30, 80, 18, "eps");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0.005,0.05);
@@ -662,14 +699,15 @@ ControlPanel::ControlPanel() {
       o->callback((fltk::Callback*)cb_mPlay_but);
       o->tooltip("Play/Pause");
     }
-     {fltk::ValueInput* o = mFrameStep_inp = new fltk::ValueInput(591, 71, 30, 28, "Step");
+     {fltk::ValueInput* o = mFrameStep_inp = new fltk::ValueInput(581, 71, 40, 28, "Step");
       o->box(fltk::PLASTIC_UP_BOX);
       o->buttonbox(fltk::PLASTIC_UP_BOX);
       o->minimum(1);
-      o->maximum(10);
+      o->maximum(100);
       o->step(1);
       o->value(1);
       o->when(fltk::WHEN_CHANGED);
+	  o->callback((fltk::Callback*)cb_mFrameStep_inp);
       o->value(1);
     }
      {fltk::Button* o = mForward_but = new fltk::Button(590, 50, 30, 16, "@>");
@@ -762,7 +800,8 @@ double ControlPanel::getSpeed() {
 }
 
 bool ControlPanel::isLooping() {
-  if((int)mLoop_but->value()==1) return true; else return false;
+  if((int)mLoop_but->value()==1) return true; 
+  else return false;
 }
 
 bool ControlPanel::isPlaying() {

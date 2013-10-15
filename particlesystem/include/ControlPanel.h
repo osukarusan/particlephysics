@@ -110,6 +110,12 @@ private:
 	static void cb_mSpringDamp_in(fltk::ValueInput*,void*);
 
 public:
+	fltk::ValueInput *mSpringBallRad_in;
+private:
+	inline void cb_mSpringBallRad_in_i(fltk::ValueInput*,void*);
+	static void cb_mSpringBallRad_in(fltk::ValueInput*,void*);
+
+public:
 	fltk::Button *mAddParticle_but;
 private:
     inline void cb_mAddParticle_but_i(fltk::Button*, void*);
@@ -145,6 +151,10 @@ private:
     static void cb_mPlay_but(fltk::Button*, void*);
 public:
     fltk::ValueInput *mFrameStep_inp;
+private:
+    inline void cb_mFrameStep_inp_i(fltk::ValueInput*, void*);
+    static void cb_mFrameStep_inp(fltk::ValueInput*, void*);
+public:
     fltk::Button *mForward_but;
 private:
     inline void cb_mForward_but_i(fltk::Button*, void*);

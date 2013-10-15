@@ -33,6 +33,7 @@ public:
 	static double mCoeffRestitution;
 	static double mTangentialFriction;
 	static double mCollisionEpsilon;
+	static int	  mFrameSkip;
 
 	// Galileo's experiment
 	static double mInitialHeight;
@@ -54,6 +55,7 @@ public:
 	static double mSpringK;
 	static double mSpringDamp;
 	static Vec3d  mSpringBall;
+	static double mSpringBallRadius;
 
 	// Tinkertoy
 	static Vec3d  mCircleWireCenter;
