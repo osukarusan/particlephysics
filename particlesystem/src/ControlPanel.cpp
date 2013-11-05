@@ -25,6 +25,8 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
 			this->mSpringBallRad_in->hide();
+			this->mFixedCloth_but->hide();
+			this->mBending_but->hide();
 			break;
 		case SCENE_SNOW:
 			this->mHeight_sli->hide();
@@ -44,6 +46,8 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
 			this->mSpringBallRad_in->hide();
+			this->mFixedCloth_but->hide();
+			this->mBending_but->hide();
 			this->mRestitution_in->value(0.8);
 			DataManager::mCoeffRestitution = 0.8;
 			break;
@@ -65,6 +69,8 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
 			this->mSpringBallRad_in->hide();
+			this->mFixedCloth_but->hide();
+			this->mBending_but->hide();
 			this->mRestitution_in->value(0.25);
 			DataManager::mCoeffRestitution = 0.25;
 			break;
@@ -86,6 +92,29 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mSpringK_in->hide();
 			this->mSpringDamp_in->hide();
 			this->mSpringBallRad_in->hide();
+			this->mFixedCloth_but->hide();
+			this->mBending_but->hide();
+			break;
+		case SCENE_FLUID:
+			this->mHeight_sli->hide();
+			this->mParticles_sli->hide();
+			this->mCube_radio->hide();
+			this->mBall_radio->hide();
+			this->mPartCollision_check->hide();
+			this->mRestitution_in->hide();
+			this->mParticleRad_in->hide();
+			this->mColor_but->hide();
+			this->mDamp_in->hide();
+			this->mAddParticle_but->hide();
+			this->mAddFixedDist_but->hide();
+			this->mFountainParticles_sli->hide();
+			this->mFountainHeight_sli->hide();
+			this->mRopeParticles_sli->hide();
+			this->mSpringK_in->hide();
+			this->mSpringDamp_in->hide();
+			this->mSpringBallRad_in->hide();
+			this->mFixedCloth_but->hide();
+			this->mBending_but->hide();
 			break;
 		case SCENE_ROPE:
 		case SCENE_CLOTH:
@@ -106,6 +135,14 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mSpringK_in->set_visible();
 			this->mSpringDamp_in->set_visible();
 			this->mSpringBallRad_in->set_visible();
+			if (scene == SCENE_ROPE) {
+				this->mFixedCloth_but->hide();
+				this->mBending_but->hide();
+			}
+			else {
+				this->mFixedCloth_but->set_visible();
+				this->mBending_but->set_visible();
+			}
 			this->mRestitution_in->value(0.1);
 			DataManager::mCoeffRestitution = 0.1;
 			break;
@@ -252,6 +289,22 @@ inline void ControlPanel::cb_mColor_but_i(fltk::Button*, void*) {
 }
 void ControlPanel::cb_mColor_but(fltk::Button* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mColor_but_i(o,v);
+}
+
+inline void ControlPanel::cb_mFixedCloth_but_i(fltk::Button*, void*) {
+	DataManager::mFixedCloth = !DataManager::mFixedCloth;
+    DataManager::gReset = true;
+}
+void ControlPanel::cb_mFixedCloth_but(fltk::Button* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFixedCloth_but_i(o,v);
+}
+
+inline void ControlPanel::cb_mBending_but_i(fltk::Button*, void*) {
+	DataManager::mBendingCloth = !DataManager::mBendingCloth;
+    DataManager::gReset = true;
+}
+void ControlPanel::cb_mBending_but(fltk::Button* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mBending_but_i(o,v);
 }
 
 inline void ControlPanel::cb_mDamp_in_i(fltk::ValueInput* o, void*) {
@@ -507,18 +560,18 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueSlider* o = mRopeParticles_sli = new fltk::ValueSlider(200, 5, 307, 18, "Particles");
+	{fltk::ValueSlider* o = mRopeParticles_sli = new fltk::ValueSlider(200, 30, 100, 18, "Particles");
       o->type(fltk::ValueSlider::TICK_ABOVE);
 	  o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
       o->range(10, 50);
-      o->step(1);
+      o->step(10);
 	  o->value(30);
       o->callback((fltk::Callback*)cb_mRopeParticles_sli);
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueInput* o = mSpringK_in = new fltk::ValueInput(155, 30, 70, 18, "K");
+	{fltk::ValueInput* o = mSpringK_in = new fltk::ValueInput(155, 5, 70, 18, "K");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0.0,100000.0);
@@ -528,7 +581,7 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueInput* o = mSpringDamp_in = new fltk::ValueInput(290, 30, 70, 18, "K_d");
+	{fltk::ValueInput* o = mSpringDamp_in = new fltk::ValueInput(290, 5, 70, 18, "K_d");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0.0,100000.0);
@@ -538,7 +591,7 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueInput* o = mSpringBallRad_in = new fltk::ValueInput(430, 30, 70, 18, "Rad");
+	{fltk::ValueInput* o = mSpringBallRad_in = new fltk::ValueInput(430, 5, 70, 18, "Rad");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0.0,1);
@@ -602,6 +655,32 @@ ControlPanel::ControlPanel() {
       o->highlight_color((fltk::Color)0xece9d800);
       o->callback((fltk::Callback*)cb_mColor_but);
       o->tooltip("Snow/Color particle style");
+    }
+	{fltk::Button* o = mFixedCloth_but = new fltk::Button(320, 30, 64, 25, "Fixed");
+      o->type(fltk::Button::TOGGLE);
+      o->box(fltk::PLASTIC_UP_BOX);
+      o->buttonbox(fltk::PLASTIC_UP_BOX);
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->color((fltk::Color)0xece9d800);
+      o->selection_color((fltk::Color)0x8099ff00);
+      o->selection_textcolor((fltk::Color)56);
+      o->highlight_color((fltk::Color)0xece9d800);
+      o->callback((fltk::Callback*)cb_mFixedCloth_but);
+	  o->value(true);
+      o->tooltip("Fix cloth on top");
+    }
+	{fltk::Button* o = mBending_but = new fltk::Button(400, 30, 64, 25, "Bending");
+      o->type(fltk::Button::TOGGLE);
+      o->box(fltk::PLASTIC_UP_BOX);
+      o->buttonbox(fltk::PLASTIC_UP_BOX);
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->color((fltk::Color)0xece9d800);
+      o->selection_color((fltk::Color)0x8099ff00);
+      o->selection_textcolor((fltk::Color)56);
+      o->highlight_color((fltk::Color)0xece9d800);
+      o->callback((fltk::Callback*)cb_mBending_but);
+	  o->value(true);
+      o->tooltip("Use Provot's bending forces");
     }
 	{fltk::ValueInput* o = mDamp_in = new fltk::ValueInput(190, 5, 80, 18, "kDamp");
       o->labelfont(fltk::HELVETICA_BOLD);

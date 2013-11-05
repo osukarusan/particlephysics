@@ -10,10 +10,11 @@
 #include "SceneTinkertoy.h"
 #include "SceneRope.h"
 #include "SceneCloth.h"
+#include "SceneFluid.h"
 
 
-enum SceneType { SCENE_GALILEO, SCENE_SNOW,		SCENE_FOUNTAIN,		SCENE_TINKERTOY, 
-				 SCENE_ROPE,	SCENE_CLOTH,	NUM_SCENES };
+enum SceneType { SCENE_FLUID,	SCENE_CLOTH,	SCENE_ROPE,			SCENE_FOUNTAIN,		
+				 SCENE_GALILEO,	SCENE_SNOW,		SCENE_TINKERTOY,	NUM_SCENES };
 
 
 class DataManager{
@@ -50,12 +51,21 @@ public:
 	static double mFountainHeight;
 	static Vec3d  mBallCenter;
 
-	// Rope
+	// Rope and Cloth
 	static int    mRopeParticles;
 	static double mSpringK;
 	static double mSpringDamp;
 	static Vec3d  mSpringBall;
 	static double mSpringBallRadius;
+	static bool	  mBendingCloth;
+	static bool   mFixedCloth;
+
+	// Fluid
+	static int    mFluidParticles;
+	static double mFluidNeighborRadius;
+	static double mFluidDensity;
+	static double mFluidDynamicViscosity;
+	static double mCsound;
 
 	// Tinkertoy
 	static Vec3d  mCircleWireCenter;
@@ -77,6 +87,7 @@ public:
 	static SceneTinkertoy*	mSceneTinkertoy;
 	static SceneRope*		mSceneRope;
 	static SceneCloth*		mSceneCloth;
+	static SceneFluid*		mSceneFluid;
 
 	static std::vector<std::vector<Particle> > mParticles;
 	static std::vector<Vec3d> mCenter;

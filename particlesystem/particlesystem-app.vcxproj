@@ -138,6 +138,7 @@
     <ClCompile Include="src\RigidJointConstraint.cpp" />
     <ClCompile Include="src\RungeKuttaIntegrator.cpp" />
     <ClCompile Include="src\SceneCloth.cpp" />
+    <ClCompile Include="src\SceneFluid.cpp" />
     <ClCompile Include="src\SceneFountain.cpp" />
     <ClCompile Include="src\SceneRope.cpp" />
     <ClCompile Include="src\SpringForce.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="include\RigidJointConstraint.h" />
     <ClInclude Include="include\RungeKuttaIntegrator.h" />
     <ClInclude Include="include\SceneCloth.h" />
+    <ClInclude Include="include\SceneFluid.h" />
     <ClInclude Include="include\SceneFountain.h" />
     <ClInclude Include="include\SceneRope.h" />
     <ClInclude Include="include\SpringForce.h" />

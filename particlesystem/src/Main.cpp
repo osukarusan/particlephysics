@@ -55,6 +55,9 @@ void onTimer(void *){
 				case SCENE_CLOTH:		delete DataManager::mSceneCloth;
 										DataManager::mSceneCloth = new SceneCloth();	
 										break;
+				case SCENE_FLUID:		delete DataManager::mSceneFluid;
+										DataManager::mSceneFluid = new SceneFluid();	
+										break;
 			}
 		}
 		DataManager::mParticles.clear();
@@ -80,6 +83,9 @@ void onTimer(void *){
 			case SCENE_CLOTH:
 				DataManager::mSceneCloth->init();
 				break;
+			case SCENE_FLUID:
+				DataManager::mSceneFluid->init();
+				break;
 			default: break;
 		}
 		DataManager::gReset = false;
@@ -96,6 +102,7 @@ void onTimer(void *){
 		case SCENE_TINKERTOY:	DataManager::mSceneTinkertoy->update(); break;
 		case SCENE_ROPE:		DataManager::mSceneRope->update();		break;
 		case SCENE_CLOTH:		DataManager::mSceneCloth->update();		break;
+		case SCENE_FLUID:		DataManager::mSceneFluid->update();		break;
 		}
 		// ---------  end simulation code-------------------
 	}
@@ -115,12 +122,13 @@ int main(int argc, char ** argv){
 	DataManager::mSceneTinkertoy = new SceneTinkertoy();
 	DataManager::mSceneRope = new SceneRope();
 	DataManager::mSceneCloth = new SceneCloth();
+	DataManager::mSceneFluid = new SceneFluid();
 	// ---------------------------------------------
 
-	DataManager::gCurrentScene = SCENE_ROPE;
-	DataManager::gLastScene    = SCENE_ROPE;
-	DataManager::mSceneRope->init();
-	DataManager::mUI->mControl->setScene(SCENE_ROPE);
+	DataManager::gCurrentScene = SCENE_FLUID;
+	DataManager::gLastScene    = SCENE_FLUID;
+	DataManager::mSceneFluid->init();
+	DataManager::mUI->mControl->setScene(SCENE_FLUID);
 	
 	// show UI
 	fltk::visual(fltk::DOUBLE_BUFFER|fltk::INDEXED_COLOR);

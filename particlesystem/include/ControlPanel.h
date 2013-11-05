@@ -92,6 +92,18 @@ private:
     static void cb_mColor_but(fltk::Button*, void*);
 
 public:
+	fltk::Button *mFixedCloth_but;
+private:
+    inline void cb_mFixedCloth_but_i(fltk::Button*, void*);
+    static void cb_mFixedCloth_but(fltk::Button*, void*);
+
+public:
+	fltk::Button *mBending_but;
+private:
+    inline void cb_mBending_but_i(fltk::Button*, void*);
+    static void cb_mBending_but(fltk::Button*, void*);
+
+public:
 	fltk::ValueInput *mDamp_in;
 private:
 	inline void cb_mDamp_in_i(fltk::ValueInput*,void*);

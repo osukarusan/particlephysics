@@ -19,6 +19,7 @@ public:
 	Vec3d vel, prevVel;
 	Vec3d force;
 	float mass;
+	float density;
 
 	Vec3f color;
 

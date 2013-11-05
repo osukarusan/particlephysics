@@ -53,16 +53,18 @@ void SceneCloth::init() {
 	int N = DataManager::mRopeParticles;
 	std::vector<Particle> vparts;
 	double eps = DataManager::mCollisionEpsilon;
+	double iniz = (DataManager::mFixedCloth ? 0 : 0.05*N); 
+
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) {
-			Vec3d pp(0.1*j - 0.05*N, 3, -0.1*i);
+			Vec3d pp(0.1*j - 0.05*N, 3, -0.1*i + iniz);
 			Vec3d pv(0, 0, 0);
 			Particle* p = new Particle(pp, pv, 1.0);
 			p->color = Vec3f(random01(), random01(), random01());
 			m_system->addParticle(p);
 			vparts.push_back(*p);
 
-			if (i > 0) {
+			if (i > 0 || !DataManager::mFixedCloth) {
 				m_gravityForce->addInfluencedParticle(p);
 			}
 			else {
@@ -78,14 +80,16 @@ void SceneCloth::init() {
 			double multiplier = 1.0;
 
 			// bend
-			if (i >= 2)		m_springs.push_back(createSpring(p, m_system->getParticle((i-2)*N + j)));
-			else			multiplier *= 2.0;
-			if (i < N-2)	m_springs.push_back(createSpring(p, m_system->getParticle((i+2)*N + j)));
-			else			multiplier *= 2.0;
-			if (j >= 2)		m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j - 2)));
-			else			multiplier *= 2.0;
-			if (j < N-2)	m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j + 2)));
-			else			multiplier *= 2.0;
+			if (DataManager::mBendingCloth) {
+				if (i >= 2)		m_springs.push_back(createSpring(p, m_system->getParticle((i-2)*N + j)));
+				else			multiplier *= 2.0;
+				if (i < N-2)	m_springs.push_back(createSpring(p, m_system->getParticle((i+2)*N + j)));
+				else			multiplier *= 2.0;
+				if (j >= 2)		m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j - 2)));
+				else			multiplier *= 2.0;
+				if (j < N-2)	m_springs.push_back(createSpring(p, m_system->getParticle(i*N + j + 2)));
+				else			multiplier *= 2.0;
+			}
 
 			// stretch
 			m_springs.push_back(createSpring(p, m_system->getParticle((i-1)*N + j), multiplier));
@@ -115,7 +119,7 @@ void SceneCloth::update() {
 	// position correction
 	for (int iter = 0; iter < 3; iter++)
 		for (unsigned int i = 0; i < m_springs.size(); i++)
-			m_springs[i]->correctPosition();
+			m_springs[m_springs.size() - 1 - i]->correctPosition();
 
 	// collision detection and response
 	double kr  = DataManager::mCoeffRestitution;
@@ -139,7 +143,7 @@ void SceneCloth::update() {
 		if (m_floor->testCollision(p, eps, pos, nor)) {
 			Vec3d velN = dot(nor, p->vel)*nor;
 			Vec3d velT = p->vel - velN;
-			p->vel = kt*velT - kr*velN;
+			p->vel = 0*velT - kr*velN;
 			p->pos = p->pos - (1 + kr)*(dot(nor, p->pos) + m_floor->getK())*nor + eps*nor;
 		}
 	}

@@ -29,6 +29,14 @@ double DataManager::mSpringK          = 1000.0f;
 double DataManager::mSpringDamp       = 10.0f;
 Vec3d  DataManager::mSpringBall	      = Vec3d(0.5, 1.5, 0);
 double DataManager::mSpringBallRadius = 0.5;
+bool   DataManager::mFixedCloth       = true;
+bool   DataManager::mBendingCloth     = true;
+
+int    DataManager::mFluidParticles = 1000;
+double DataManager::mFluidNeighborRadius = 0.25;
+double DataManager::mFluidDensity = 1000.0;
+double DataManager::mFluidDynamicViscosity = 0.001; 
+double DataManager::mCsound = 10;
 
 Vec3d  DataManager::mCircleWireCenter = Vec3d(0,0,0);
 double DataManager::mCircleWireRadius = 1.0;
@@ -47,6 +55,7 @@ SceneFountain*	DataManager::mSceneFountain = NULL;
 SceneTinkertoy*	DataManager::mSceneTinkertoy = NULL;
 SceneRope*		DataManager::mSceneRope = NULL;
 SceneCloth*		DataManager::mSceneCloth = NULL;
+SceneFluid*		DataManager::mSceneFluid = NULL;
 
 Vec3d  DataManager::mVolumeCenter = Vec3d(0,0,0);
 

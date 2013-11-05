@@ -165,6 +165,9 @@
     <ClCompile Include="src\SceneRope.cpp">
       <Filter>Source Files\Assignment</Filter>
     </ClCompile>
+    <ClCompile Include="src\SceneFluid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ConstrainedParticleSystem.h">
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="include\VerletIntegrator.h">
       <Filter>Header Files\ParticleSystem\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneFluid.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
