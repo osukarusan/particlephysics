@@ -1,5 +1,7 @@
 #include "SceneFluid.h"
 #include "DataManager.h"
+#include <vector>
+#include <map>
 #define M_PI 3.14159265358979323846
 
 
@@ -29,19 +31,27 @@ void SceneFluid::init() {
 	for (int i = 0; i < numParticles; i++) {
 		Particle *p = new Particle();
 
-		double rrad = 0.25*double(rand()%1024)/1024.0;
-		double rang = M_PI*double(rand()%1024)/1024.0;
-		double rver =  0.5*double(rand()%1024)/1024.0;
-		p->pos   = p->prevPos = Vec3d(rrad*cos(rang), 2.0 + rver, rrad*sin(rang));
+		double rrad =   0.25*double(rand()%1024)/1024.0;
+		double rang = 2*M_PI*double(rand()%1024)/1024.0;
+		double rver =    0.8*double(rand()%1024)/1024.0;
+		p->pos   = p->prevPos = Vec3d(rrad*cos(rang), 3.0 + rver, rrad*sin(rang));
 		p->vel   = p->vel     = Vec3d(0,0,0);
-		p->color = Vec3f(0.2f, 0.2f, 1.0f);
+		p->color = Vec3f(0.2f, 1.0f, 1.0f);
 		p->mass  = 0.01;
+
+		particles.push_back(p);
 	}
 	
 	boxContainer = new CollisionAABB();
-	boxContainer->setPosition(Vec3d(-1.0, -2.0, -1.0));
+	boxContainer->setPosition(Vec3d(-1.0, 0.0, -1.0));
 	boxContainer->setSize(Vec3d(2.0, 4.0, 2.0));
+	boxContainer->useInnerSide(true);
 
+	std::vector<Particle> vparts;
+	for (int i = 0; i < numParticles; i++) {
+		vparts.push_back(*particles[i]);
+	}
+	DataManager::mParticles.push_back(vparts);
 }
 
 void SceneFluid::update() {
@@ -53,7 +63,7 @@ void SceneFluid::update() {
 	double c_sound      = DataManager::mCsound;
 
 	// find particle neighbors
-	std::vector<std::vector<int> > neighbors;
+	std::vector<std::vector<int> > neighbors(numParticles);
 	findNeighbors(neighbors, hRadius);
 
 	// calculate density for each particle
@@ -165,18 +175,19 @@ double SceneFluid::lapW(const Vec3d& x, double h) {
 
 void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double hLength) {
 
-	Vec3d s = boxContainer->getSize()/(2*hLength);
+	Vec3d s = boxContainer->getSize()/hLength;
 	Vec3d bmin = boxContainer->getPosition();
 
 	int dim[3];
 	dim[0] = int(s[0] + 0.95);
 	dim[1] = int(s[1] + 0.95);
 	dim[2] = int(s[2] + 0.95);
+	int nc = dim[0]*dim[1]*dim[2];
 	int dx = dim[1]*dim[2];
 	int dy = dim[2];
 	int dz = 1;
 
-	std::vector<std::vector<int> > grid(dim[0]*dim[1]*dim[2]);
+	std::map<int, std::vector<int> > grid;
 	for (int i = 0; i < int(particles.size()); i++) {
 		Vec3d coords = (particles[i]->pos - bmin)/hLength;
 		int x = int(coords[0]);
@@ -185,7 +196,7 @@ void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double
 		grid[x*dx + y*dy + z*dz].push_back(i);
 	}
 
-	for (int i = 0; i < int(particles.size()); i++) {
+	for (int i = 0; i < particles.size(); i++) {
 		Particle* p = particles[i];
 		Vec3d coords = (p->pos - bmin)/hLength;
 		int x = int(coords[0]);
@@ -195,10 +206,10 @@ void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double
 			for (int iy = -1; iy <= 1; iy++) {
 				for (int iz = -1; iz <= 1; iz++) {
 					int gid = (x + ix)*dx + (y + iy)*dy + (z + iz)*dz;
-					if (gid >= 0 && gid < grid.size()) {
+					if (gid >= 0 && gid < nc) {
 						std::vector<int>& neighs = grid[gid];
 						for (int j = 0; j < neighs.size(); j++) {
-							if (len(p->pos - particles[neighs[j]]->pos) < hLength)
+							if (neighs[j] != i && len(p->pos - particles[neighs[j]]->pos) < hLength)
 								neighbors[i].push_back(neighs[j]);
 						}
 					}

@@ -33,7 +33,7 @@ bool   DataManager::mFixedCloth       = true;
 bool   DataManager::mBendingCloth     = true;
 
 int    DataManager::mFluidParticles = 1000;
-double DataManager::mFluidNeighborRadius = 0.25;
+double DataManager::mFluidNeighborRadius = 0.1;
 double DataManager::mFluidDensity = 1000.0;
 double DataManager::mFluidDynamicViscosity = 0.001; 
 double DataManager::mCsound = 10;

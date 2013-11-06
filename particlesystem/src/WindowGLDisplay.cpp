@@ -136,6 +136,9 @@ void WindowGLDisplay::render()
 	else if (DataManager::gCurrentScene == SCENE_ROPE || DataManager::gCurrentScene == SCENE_CLOTH) {
 		glTranslatef(0, -1.5, 0);
 	}
+	else if (DataManager::gCurrentScene == SCENE_FLUID) {
+		glTranslatef(0, -2.0, 0);
+	}
 
 	// curr frame to be displayed
 	int currFrame = DataManager::mUI->mControl->getCurrentFrame();
@@ -164,6 +167,7 @@ void WindowGLDisplay::render()
 		case SCENE_TINKERTOY: prad = 0.075;  break;
 		case SCENE_ROPE:      prad = DataManager::mCollisionEpsilon; break;
 		case SCENE_CLOTH:     prad = DataManager::mCollisionEpsilon; break;
+		case SCENE_FLUID:     prad = DataManager::mCollisionEpsilon; break;
 	}
 	for (int i = 0; i < particles.size(); i++) {
 		glColor3f(1.0, 0.0, 0.0);
@@ -235,6 +239,20 @@ void WindowGLDisplay::render()
 			glVertex3f( 4.0f, 0.0f,  4.0f);
 			glVertex3f( 4.0f, 0.0f, -4.0f);
 		glEnd();
+
+		glEnable(GL_LIGHTING);
+	}
+	else if (DataManager::gCurrentScene == SCENE_FLUID) 
+	{
+		glDisable(GL_LIGHTING);
+		glLineWidth(1.0);
+		
+		glColor3f(1, 0, 0);
+		glPushMatrix();
+		glTranslatef(0, 0.5, 0);
+		glScalef(1, 0.5f, 1);
+		glutWireCube(2);
+		glPopMatrix();
 
 		glEnable(GL_LIGHTING);
 	}
