@@ -137,7 +137,7 @@ void WindowGLDisplay::render()
 		glTranslatef(0, -1.5, 0);
 	}
 	else if (DataManager::gCurrentScene == SCENE_FLUID) {
-		glTranslatef(0, -2.0, 0);
+		glTranslatef(0, -2.0, -1.0);
 	}
 
 	// curr frame to be displayed
@@ -255,6 +255,7 @@ void WindowGLDisplay::render()
 		glPopMatrix();
 
 		glEnable(GL_LIGHTING);
+
 	}
 	else if (DataManager::gCurrentScene == SCENE_ROPE || DataManager::gCurrentScene == SCENE_CLOTH) {
 		

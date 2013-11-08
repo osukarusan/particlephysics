@@ -118,10 +118,10 @@ void SceneFluid::update() {
 
 	// integration step (Euler)
 	for (int i = 0; i < numParticles; i++) {
-		particles[i]->prevVel = particles[i]->vel;
-		particles[i]->vel     = acceleration[i]*hTime;
-		particles[i]->prevPos = particles[i]->pos;
-		particles[i]->pos     = particles[i]->vel*hTime;
+		particles[i]->prevVel  = particles[i]->vel;
+		particles[i]->vel     += acceleration[i]*hTime;
+		particles[i]->prevPos  = particles[i]->pos;
+		particles[i]->pos     += particles[i]->vel*hTime;
 	}
 
 	// collision with the container
