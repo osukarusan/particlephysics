@@ -60,6 +60,24 @@ private:
 	static void cb_mRopeParticles_sli(fltk::ValueSlider*,void*);
 
 public:
+	fltk::ValueSlider *mFluidParticles_sli;
+private:
+	inline void cb_mFluidParticles_sli_i(fltk::ValueSlider*,void*);
+	static void cb_mFluidParticles_sli(fltk::ValueSlider*,void*);
+
+public:
+	fltk::ValueInput *mFluidRad_in;
+	fltk::ValueInput *mFluidDensity_in;
+	fltk::ValueInput *mFluidViscosity_in;
+private:
+	inline void cb_mFluidRad_in_i(fltk::ValueInput*,void*);
+	static void cb_mFluidRad_in(fltk::ValueInput*,void*);
+	inline void cb_mFluidDensity_in_i(fltk::ValueInput*,void*);
+	static void cb_mFluidDensity_in(fltk::ValueInput*,void*);
+	inline void cb_mFluidViscosity_in_i(fltk::ValueInput*,void*);
+	static void cb_mFluidViscosity_in(fltk::ValueInput*,void*);
+
+public:
 	fltk::CheckButton *mPartCollision_check;
 private:
 	inline void cb_mPartCollision_check_i(fltk::CheckButton*,void*);
@@ -191,5 +209,7 @@ public:
   void setScene(SceneType scene);
 private:
   bool mPlaying;
+
+  void hideAll();
 };
 #endif

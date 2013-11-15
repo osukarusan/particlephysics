@@ -4,32 +4,41 @@
 #include "DataManager.h"
 
 
+void ControlPanel::hideAll() {
+	this->mHeight_sli->hide();
+	this->mParticles_sli->hide();
+	this->mCube_radio->hide();
+	this->mBall_radio->hide();
+	this->mPartCollision_check->hide();
+	this->mRestitution_in->hide();
+	this->mParticleRad_in->hide();
+	this->mColor_but->hide();
+	this->mDamp_in->hide();
+	this->mAddParticle_but->hide();
+	this->mAddFixedDist_but->hide();
+	this->mFountainParticles_sli->hide();
+	this->mFountainHeight_sli->hide();
+	this->mRopeParticles_sli->hide();
+	this->mSpringK_in->hide();
+	this->mSpringDamp_in->hide();
+	this->mSpringBallRad_in->hide();
+	this->mFixedCloth_but->hide();
+	this->mBending_but->hide();
+	this->mFluidParticles_sli->hide();
+	this->mFluidRad_in->hide();
+	this->mFluidDensity_in->hide();
+	this->mFluidViscosity_in->hide();
+}
+
 void ControlPanel::setScene(SceneType scene) {
+
+	hideAll();
 
 	switch (scene) {
 		case SCENE_GALILEO:
 			this->mHeight_sli->set_visible();
-			this->mParticles_sli->hide();
-			this->mCube_radio->hide();
-			this->mBall_radio->hide();
-			this->mPartCollision_check->hide();
-			this->mRestitution_in->hide();
-			this->mParticleRad_in->hide();
-			this->mColor_but->hide();
-			this->mDamp_in->hide();
-			this->mAddParticle_but->hide();
-			this->mAddFixedDist_but->hide();
-			this->mFountainParticles_sli->hide();
-			this->mFountainHeight_sli->hide();
-			this->mRopeParticles_sli->hide();
-			this->mSpringK_in->hide();
-			this->mSpringDamp_in->hide();
-			this->mSpringBallRad_in->hide();
-			this->mFixedCloth_but->hide();
-			this->mBending_but->hide();
 			break;
 		case SCENE_SNOW:
-			this->mHeight_sli->hide();
 			this->mParticles_sli->set_visible();
 			this->mCube_radio->set_visible();
 			this->mBall_radio->set_visible();
@@ -37,114 +46,43 @@ void ControlPanel::setScene(SceneType scene) {
 			this->mRestitution_in->set_visible();	
 			this->mParticleRad_in->set_visible();
 			this->mColor_but->set_visible();
-			this->mDamp_in->hide();
-			this->mAddParticle_but->hide();
-			this->mAddFixedDist_but->hide();
-			this->mFountainParticles_sli->hide();
-			this->mFountainHeight_sli->hide();
-			this->mRopeParticles_sli->hide();
-			this->mSpringK_in->hide();
-			this->mSpringDamp_in->hide();
-			this->mSpringBallRad_in->hide();
-			this->mFixedCloth_but->hide();
-			this->mBending_but->hide();
 			this->mRestitution_in->value(0.8);
 			DataManager::mCoeffRestitution = 0.8;
 			break;
 		case SCENE_FOUNTAIN:
-			this->mHeight_sli->hide();
-			this->mParticles_sli->hide();
-			this->mCube_radio->hide();
-			this->mBall_radio->hide();
 			this->mPartCollision_check->hide();
 			this->mRestitution_in->set_visible();	
 			this->mParticleRad_in->set_visible();
-			this->mColor_but->hide();
-			this->mDamp_in->hide();
-			this->mAddParticle_but->hide();
-			this->mAddFixedDist_but->hide();
 			this->mFountainParticles_sli->set_visible();
 			this->mFountainHeight_sli->set_visible();
-			this->mRopeParticles_sli->hide();
-			this->mSpringK_in->hide();
-			this->mSpringDamp_in->hide();
-			this->mSpringBallRad_in->hide();
-			this->mFixedCloth_but->hide();
-			this->mBending_but->hide();
 			this->mRestitution_in->value(0.25);
 			DataManager::mCoeffRestitution = 0.25;
 			break;
 		case SCENE_TINKERTOY:
-			this->mHeight_sli->hide();
-			this->mParticles_sli->hide();
-			this->mCube_radio->hide();
-			this->mBall_radio->hide();
-			this->mPartCollision_check->hide();
-			this->mRestitution_in->hide();
-			this->mParticleRad_in->hide();
-			this->mColor_but->hide();
 			this->mDamp_in->set_visible();
 			this->mAddParticle_but->set_visible();
 			this->mAddFixedDist_but->set_visible();
-			this->mFountainParticles_sli->hide();
-			this->mFountainHeight_sli->hide();
-			this->mRopeParticles_sli->hide();
-			this->mSpringK_in->hide();
-			this->mSpringDamp_in->hide();
-			this->mSpringBallRad_in->hide();
-			this->mFixedCloth_but->hide();
-			this->mBending_but->hide();
-			break;
-		case SCENE_FLUID:
-			this->mHeight_sli->hide();
-			this->mParticles_sli->hide();
-			this->mCube_radio->hide();
-			this->mBall_radio->hide();
-			this->mPartCollision_check->hide();
-			this->mRestitution_in->hide();
-			this->mParticleRad_in->hide();
-			this->mColor_but->hide();
-			this->mDamp_in->hide();
-			this->mAddParticle_but->hide();
-			this->mAddFixedDist_but->hide();
-			this->mFountainParticles_sli->hide();
-			this->mFountainHeight_sli->hide();
-			this->mRopeParticles_sli->hide();
-			this->mSpringK_in->hide();
-			this->mSpringDamp_in->hide();
-			this->mSpringBallRad_in->hide();
-			this->mFixedCloth_but->hide();
-			this->mBending_but->hide();
 			break;
 		case SCENE_ROPE:
 		case SCENE_CLOTH:
-			this->mHeight_sli->hide();
-			this->mParticles_sli->hide();
-			this->mCube_radio->hide();
-			this->mBall_radio->hide();
-			this->mPartCollision_check->hide();
 			this->mRestitution_in->set_visible();	
 			this->mParticleRad_in->set_visible();
-			this->mColor_but->hide();
-			this->mDamp_in->hide();
-			this->mAddParticle_but->hide();
-			this->mAddFixedDist_but->hide();
-			this->mFountainParticles_sli->hide();
-			this->mFountainHeight_sli->hide();
 			this->mRopeParticles_sli->set_visible();
 			this->mSpringK_in->set_visible();
 			this->mSpringDamp_in->set_visible();
 			this->mSpringBallRad_in->set_visible();
-			if (scene == SCENE_ROPE) {
-				this->mFixedCloth_but->hide();
-				this->mBending_but->hide();
-			}
-			else {
+			if (scene == SCENE_CLOTH) {
 				this->mFixedCloth_but->set_visible();
 				this->mBending_but->set_visible();
 			}
 			this->mRestitution_in->value(0.1);
 			DataManager::mCoeffRestitution = 0.1;
+			break;
+		case SCENE_FLUID:
+			this->mFluidParticles_sli->set_visible();
+			this->mFluidRad_in->set_visible();
+			this->mFluidDensity_in->set_visible();
+			this->mFluidViscosity_in->set_visible();
 			break;
 		default: 
 			break;
@@ -235,6 +173,53 @@ inline void ControlPanel::cb_mRopeParticles_sli_i(fltk::ValueSlider* o, void*) {
 void ControlPanel::cb_mRopeParticles_sli(fltk::ValueSlider* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mRopeParticles_sli_i(o,v);
 }
+
+
+inline void ControlPanel::cb_mFluidParticles_sli_i(fltk::ValueSlider* o, void*) {
+  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mFluidParticles = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mFluidParticles_sli(fltk::ValueSlider* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidParticles_sli_i(o,v);
+}
+
+inline void ControlPanel::cb_mFluidRad_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mFluidNeighborRadius = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mFluidRad_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidRad_in_i(o,v);
+}
+
+inline void ControlPanel::cb_mFluidViscosity_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mFluidDynamicViscosity = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mFluidViscosity_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidViscosity_in_i(o,v);
+}
+
+inline void ControlPanel::cb_mFluidDensity_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mFluidDensity = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mFluidDensity_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidDensity_in_i(o,v);
+}
+
 
 inline void ControlPanel::cb_mPartCollision_check_i(fltk::CheckButton* o, void*) {
   DataManager::mParticleColl = o->value();
@@ -509,7 +494,7 @@ ControlPanel::ControlPanel() {
 	{fltk::ValueInput* o = mStep_in = new fltk::ValueInput(47, 25, 80, 18, "h step");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
-      o->range(0.001, 1.00);
+      o->range(0.0001, 1.00);
       o->step(0.01);
 	  o->value(0.01);
       o->callback((fltk::Callback*)cb_mStep_in);
@@ -538,6 +523,50 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
+	{fltk::ValueSlider* o = mFluidParticles_sli = new fltk::ValueSlider(200, 5, 307, 18, "Particles");
+      o->type(fltk::ValueSlider::TICK_ABOVE);
+	  o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+      o->range(1000, 5000);
+      o->step(1000);
+	  o->value(1000);
+      o->callback((fltk::Callback*)cb_mFluidParticles_sli);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	{fltk::ValueInput* o = mFluidRad_in = new fltk::ValueInput(570, 5, 50, 18, "R Neigh.");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0.01,1.0);
+      o->step(0.1);
+	  o->value(0.1);
+	  o->callback((fltk::Callback*)cb_mFluidRad_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	{fltk::ValueInput* o = mFluidDensity_in = new fltk::ValueInput(190, 25, 80, 18, "Density");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0,100000);
+      o->step(1000);
+	  o->value(1000);
+	  o->callback((fltk::Callback*)cb_mFluidDensity_in);
+      o->align(fltk::ALIGN_LEFT);
+	  o->when(fltk::WHEN_CHANGED);
+    }
+	{fltk::ValueInput* o = mFluidViscosity_in = new fltk::ValueInput(340, 25, 80, 18, "Viscosity");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0,1);
+      o->step(0.001);
+	  o->value(0.001);
+      o->callback((fltk::Callback*)cb_mFluidViscosity_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+
+
+
 	{fltk::ValueSlider* o = mFountainHeight_sli = new fltk::ValueSlider(200, 5, 307, 18, "F. Height");
       o->type(fltk::ValueSlider::TICK_ABOVE);
 	  o->labelfont(fltk::HELVETICA_BOLD);
@@ -571,6 +600,7 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
+
 	{fltk::ValueInput* o = mSpringK_in = new fltk::ValueInput(155, 5, 70, 18, "K");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);

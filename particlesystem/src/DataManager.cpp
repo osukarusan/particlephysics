@@ -36,7 +36,7 @@ int    DataManager::mFluidParticles = 1000;
 double DataManager::mFluidNeighborRadius = 0.1;
 double DataManager::mFluidDensity = 1000.0;
 double DataManager::mFluidDynamicViscosity = 0.001; 
-double DataManager::mCsound = 10;
+double DataManager::mCsound = 88.5;
 
 Vec3d  DataManager::mCircleWireCenter = Vec3d(0,0,0);
 double DataManager::mCircleWireRadius = 1.0;

@@ -182,7 +182,7 @@ void WindowGLDisplay::render()
 		else
 			glColor3f(1.0f, 1.0f, 1.0f);
 
-		if (DataManager::gCurrentScene != SCENE_CLOTH) {
+		if (DataManager::gCurrentScene != SCENE_CLOTH && DataManager::gCurrentScene != SCENE_FLUID) {
 			glutSolidSphere(prad, 8, 8);
 		}
 		else {

@@ -31,13 +31,17 @@ void SceneFluid::init() {
 	for (int i = 0; i < numParticles; i++) {
 		Particle *p = new Particle();
 
-		double rrad =   0.25*double(rand()%1024)/1024.0;
+		/*double rrad =   0.25*double(rand()%1024)/1024.0;
 		double rang = 2*M_PI*double(rand()%1024)/1024.0;
 		double rver =    0.8*double(rand()%1024)/1024.0;
-		p->pos   = p->prevPos = Vec3d(rrad*cos(rang), 3.0 + rver, rrad*sin(rang));
+		p->pos   = p->prevPos = Vec3d(rrad*cos(rang), 3.0 + rver, rrad*sin(rang));*/
+		double x = -0.25 + 0.05*double(i%10);
+		double z = -0.25 + 0.05*double((i/10)%10);
+		double y =  2.50 + 0.05*double(i/100);
+		p->pos   = p->prevPos = Vec3d(x, y, z);
 		p->vel   = p->vel     = Vec3d(0,0,0);
 		p->color = Vec3f(0.2f, 1.0f, 1.0f);
-		p->mass  = 0.01;
+		p->mass  = 0.125;
 
 		particles.push_back(p);
 	}
@@ -78,9 +82,13 @@ void SceneFluid::update() {
 	}
 
 	// calculate pressure for each particle
+	double a = 7.0;
+	double b = fluidDensity*c_sound*c_sound/a;
 	std::vector<double> pressure(numParticles);
 	for (int i = 0; i < numParticles; i++) {
-		pressure[i] = c_sound * c_sound * (particles[i]->density - fluidDensity);
+		//pressure[i] = c_sound * c_sound * (particles[i]->density - fluidDensity);
+		double r = particles[i]->density/fluidDensity;
+		pressure[i] = b*(r*r*r*r*r*r*r - 1);
 	}
 
 	// calculate acceleration for each particle
@@ -95,8 +103,8 @@ void SceneFluid::update() {
 		for (int ni = 0; ni < neighbors[i].size(); ni++) {
 			int j = neighbors[i][ni];
 			Particle* pj = particles[j];
-			double Pij = -pj->mass*(ip + pressure[j]/(pj->density*pj->density));
-			a_p += Pij*dWdx(pj->pos - pi->pos, hRadius);
+			double Pij = pj->mass*(ip + pressure[j]/(pj->density*pj->density));
+			//a_p += -Pij*dWdx(pj->pos - pi->pos, hRadius);
 		}
 
 		// viscosity term
@@ -107,8 +115,10 @@ void SceneFluid::update() {
 			Particle* pj = particles[i];
 			Vec3d Vij = mu*pj->mass*(pj->vel - pi->vel)/(pi->density*pj->density);
 			a_v += Vij*lapW(pj->pos - pi->pos, hRadius);
+			//a_v += pj->mass*(pj->vel - pi->vel)/pj->density * lapW(pi->pos - pj->pos, hRadius);
 		}
-
+		//a_v *= mu/pi->mass;
+		
 		// gravity term
 		Vec3d a_g = Vec3d(0, -DataManager::mGravityValue, 0);
 
@@ -118,15 +128,13 @@ void SceneFluid::update() {
 
 	// integration step (Euler)
 	for (int i = 0; i < numParticles; i++) {
-		particles[i]->prevVel  = particles[i]->vel;
-		particles[i]->vel     += acceleration[i]*hTime;
-		particles[i]->prevPos  = particles[i]->pos;
-		particles[i]->pos     += particles[i]->vel*hTime;
+		particles[i]->vel += acceleration[i]*hTime;
+		particles[i]->pos += particles[i]->vel*hTime;
 	}
 
 	// collision with the container
-	double kr  = DataManager::mCoeffRestitution;
-	double kt  = DataManager::mTangentialFriction;
+	double kr  = 0.5;
+	double kt  = 1.0;
 	double eps = DataManager::mCollisionEpsilon;
 	Vec3d pos, nor;
 	for (int i = 0; i < numParticles; i++) {
@@ -149,28 +157,50 @@ void SceneFluid::update() {
 }
 
 double SceneFluid::W(const Vec3d& x, double h) {
-	double q = len(x)/h;
+	/*double q = len(x)/h;
 	double s = 8.0/(M_PI*h*h*h);
 	if (q < 0.5)	return s*(6*q*q*q - 6*q*q + 1);
 	else if (q < 1) return s*(2*(1 - q)*(1 - q)*(1 - q));
-	else			return 0;
+	else			return 0;*/
+	double r = len(x);
+	if (r <= h) {
+		double s = 315.0/(64.0*M_PI*h*h*h*h*h*h*h*h*h);
+		return s*(h*h - r*r)*(h*h - r*r)*(h*h - r*r);
+	}
+	else 
+		return 0;
 }
 
 Vec3d SceneFluid::dWdx(const Vec3d& x, double h) {
-	double q = len(x)/h;
+	/*double q = len(x)/h;
 	double s = 6.0*8.0/(M_PI*h*h*h*h);
 	Vec3d  d = norm(x);
 	if (q < 0.5)	return s*(3*q*q - 2*q)*d;
 	else if (q < 1) return s*(-(1 - q)*(1 - q))*d;
-	else			return 0*d;
+	else			return 0*d;*/
+	double r = len(x);
+	Vec3d  d = norm(x);
+	if (r <= h) {
+		double s = -945.0/(32.0*M_PI*h*h*h*h*h*h*h*h*h);
+		return s*(h*h - r*r)*(h*h - r*r)*d;
+	}
+	else 
+		return Vec3d(0, 0, 0);
 }
 
 double SceneFluid::lapW(const Vec3d& x, double h) {
-	double q = len(x)/h;
+	/*double q = len(x)/h;
 	double s = 6.0*8.0/(M_PI*h*h*h);
 	if (q < 0.5)	return s*(6*q - 2);
 	else if (q < 1) return s*(2*(1 - q));
-	else			return 0;
+	else			return 0;*/
+	double r = len(x);
+	if (r <= h) {
+		double s = 945.0/(8.0*M_PI*h*h*h*h*h*h*h*h*h);
+		return s*(h*h - r*r)*(r*r - 0.75*(h*h - r*r));
+	}
+	else 
+		return 0;
 }
 
 void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double hLength) {
