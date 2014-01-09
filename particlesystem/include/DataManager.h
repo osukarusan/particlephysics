@@ -61,11 +61,11 @@ public:
 	static bool   mFixedCloth;
 
 	// Fluid
-	static int    mFluidParticles;
-	static double mFluidNeighborRadius;
-	static double mFluidDensity;
-	static double mFluidDynamicViscosity;
-	static double mCsound;
+	static bool	  mFluid3D;
+	static double mFluidRestDensity;
+	static double mFluidSurfaceTension;
+	static double mFluidLinearViscosity;
+	static double mFluidQuadraticViscosity;
 
 	// Tinkertoy
 	static Vec3d  mCircleWireCenter;

@@ -60,22 +60,28 @@ private:
 	static void cb_mRopeParticles_sli(fltk::ValueSlider*,void*);
 
 public:
-	fltk::ValueSlider *mFluidParticles_sli;
-private:
-	inline void cb_mFluidParticles_sli_i(fltk::ValueSlider*,void*);
-	static void cb_mFluidParticles_sli(fltk::ValueSlider*,void*);
-
-public:
-	fltk::ValueInput *mFluidRad_in;
 	fltk::ValueInput *mFluidDensity_in;
+	fltk::ValueInput *mFluidSurface_in;
 	fltk::ValueInput *mFluidViscosity_in;
+	fltk::ValueInput *mFluidViscosity2_in;
 private:
-	inline void cb_mFluidRad_in_i(fltk::ValueInput*,void*);
-	static void cb_mFluidRad_in(fltk::ValueInput*,void*);
 	inline void cb_mFluidDensity_in_i(fltk::ValueInput*,void*);
 	static void cb_mFluidDensity_in(fltk::ValueInput*,void*);
+	inline void cb_mFluidSurface_in_i(fltk::ValueInput*,void*);
+	static void cb_mFluidSurface_in(fltk::ValueInput*,void*);
 	inline void cb_mFluidViscosity_in_i(fltk::ValueInput*,void*);
 	static void cb_mFluidViscosity_in(fltk::ValueInput*,void*);
+	inline void cb_mFluidViscosity2_in_i(fltk::ValueInput*,void*);
+	static void cb_mFluidViscosity2_in(fltk::ValueInput*,void*);
+
+
+public:
+	fltk::RadioButton *mFluid2D_radio, *mFluid3D_radio;
+private:
+	inline void cb_mFluid2D_radio_i(fltk::RadioButton*,void*);
+	static void cb_mFluid2D_radio(fltk::RadioButton*,void*);
+	inline void cb_mFluid3D_radio_i(fltk::RadioButton*,void*);
+	static void cb_mFluid3D_radio(fltk::RadioButton*,void*);
 
 public:
 	fltk::CheckButton *mPartCollision_check;

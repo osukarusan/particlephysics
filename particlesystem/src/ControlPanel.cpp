@@ -24,10 +24,12 @@ void ControlPanel::hideAll() {
 	this->mSpringBallRad_in->hide();
 	this->mFixedCloth_but->hide();
 	this->mBending_but->hide();
-	this->mFluidParticles_sli->hide();
-	this->mFluidRad_in->hide();
+	this->mFluid2D_radio->hide();
+	this->mFluid3D_radio->hide();
 	this->mFluidDensity_in->hide();
+	this->mFluidSurface_in->hide();
 	this->mFluidViscosity_in->hide();
+	this->mFluidViscosity2_in->hide();
 }
 
 void ControlPanel::setScene(SceneType scene) {
@@ -79,10 +81,12 @@ void ControlPanel::setScene(SceneType scene) {
 			DataManager::mCoeffRestitution = 0.1;
 			break;
 		case SCENE_FLUID:
-			this->mFluidParticles_sli->set_visible();
-			this->mFluidRad_in->set_visible();
+			this->mFluid2D_radio->set_visible();
+			this->mFluid3D_radio->set_visible();
 			this->mFluidDensity_in->set_visible();
+			this->mFluidSurface_in->set_visible();
 			this->mFluidViscosity_in->set_visible();
+			this->mFluidViscosity2_in->set_visible();
 			break;
 		default: 
 			break;
@@ -175,50 +179,67 @@ void ControlPanel::cb_mRopeParticles_sli(fltk::ValueSlider* o, void* v) {
 }
 
 
-inline void ControlPanel::cb_mFluidParticles_sli_i(fltk::ValueSlider* o, void*) {
-  double current = (double)o->value();
+inline void ControlPanel::cb_mFluidSurface_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
   if (current < o->minimum()) current = o->minimum();
   else if (current > o->maximum()) current = o->maximum();
   o->value (current);
-  DataManager::mFluidParticles = current;
+  DataManager::mFluidSurfaceTension = current;
   DataManager::gReset = true;
 }
-void ControlPanel::cb_mFluidParticles_sli(fltk::ValueSlider* o, void* v) {
-  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidParticles_sli_i(o,v);
-}
-
-inline void ControlPanel::cb_mFluidRad_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
-  if (current < o->minimum()) current = o->minimum();
-  else if (current > o->maximum()) current = o->maximum();
-  o->value (current);
-  DataManager::mFluidNeighborRadius = current;
-  DataManager::gReset = true;
-}
-void ControlPanel::cb_mFluidRad_in(fltk::ValueInput* o, void* v) {
-  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidRad_in_i(o,v);
+void ControlPanel::cb_mFluidSurface_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidSurface_in_i(o,v);
 }
 
 inline void ControlPanel::cb_mFluidViscosity_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
   if (current < o->minimum()) current = o->minimum();
   else if (current > o->maximum()) current = o->maximum();
   o->value (current);
-  DataManager::mFluidDynamicViscosity = current;
+  DataManager::mFluidLinearViscosity = current;
   DataManager::gReset = true;
 }
 void ControlPanel::cb_mFluidViscosity_in(fltk::ValueInput* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidViscosity_in_i(o,v);
 }
 
+inline void ControlPanel::cb_mFluidViscosity2_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
+  if (current < o->minimum()) current = o->minimum();
+  else if (current > o->maximum()) current = o->maximum();
+  o->value (current);
+  DataManager::mFluidQuadraticViscosity = current;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mFluidViscosity2_in(fltk::ValueInput* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidViscosity2_in_i(o,v);
+}
+
 inline void ControlPanel::cb_mFluidDensity_in_i(fltk::ValueInput* o, void*) {  double current = (double)o->value();
   if (current < o->minimum()) current = o->minimum();
   else if (current > o->maximum()) current = o->maximum();
   o->value (current);
-  DataManager::mFluidDensity = current;
+  DataManager::mFluidRestDensity = current;
   DataManager::gReset = true;
 }
 void ControlPanel::cb_mFluidDensity_in(fltk::ValueInput* o, void* v) {
   ((ControlPanel*)(o->parent()->user_data()))->cb_mFluidDensity_in_i(o,v);
 }
+
+
+inline void ControlPanel::cb_mFluid2D_radio_i(fltk::RadioButton* o, void*) {
+  DataManager::mFluid3D = false;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mFluid2D_radio(fltk::RadioButton* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluid2D_radio_i(o,v);
+}
+
+inline void ControlPanel::cb_mFluid3D_radio_i(fltk::RadioButton* o, void*) {
+  DataManager::mFluid3D = true;
+  DataManager::gReset = true;
+}
+void ControlPanel::cb_mFluid3D_radio(fltk::RadioButton* o, void* v) {
+  ((ControlPanel*)(o->parent()->user_data()))->cb_mFluid3D_radio_i(o,v);
+}
+
 
 
 inline void ControlPanel::cb_mPartCollision_check_i(fltk::CheckButton* o, void*) {
@@ -481,7 +502,7 @@ ControlPanel::ControlPanel() {
     o->user_data((void*)(this));
     o->begin();
 	
-	{fltk::ValueInput* o = mGravity_in = new fltk::ValueInput(47, 5, 80, 18, "Gravity");
+	{fltk::ValueInput* o = mGravity_in = new fltk::ValueInput(47, 25, 80, 18, "Gravity");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0,20);
@@ -491,12 +512,12 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueInput* o = mStep_in = new fltk::ValueInput(47, 25, 80, 18, "h step");
+	{fltk::ValueInput* o = mStep_in = new fltk::ValueInput(47, 5, 80, 18, "t step");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
       o->range(0.0001, 1.00);
-      o->step(0.01);
-	  o->value(0.01);
+      o->step(0.005);
+	  o->value(0.007);
       o->callback((fltk::Callback*)cb_mStep_in);
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
@@ -523,44 +544,60 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueSlider* o = mFluidParticles_sli = new fltk::ValueSlider(200, 5, 307, 18, "Particles");
-      o->type(fltk::ValueSlider::TICK_ABOVE);
-	  o->labelfont(fltk::HELVETICA_BOLD);
-      o->labelsize(13);
-      o->range(1000, 5000);
-      o->step(1000);
-	  o->value(1000);
-      o->callback((fltk::Callback*)cb_mFluidParticles_sli);
-      o->align(fltk::ALIGN_LEFT);
-      o->when(fltk::WHEN_CHANGED);
-    }
-	{fltk::ValueInput* o = mFluidRad_in = new fltk::ValueInput(570, 5, 50, 18, "R Neigh.");
+
+	{fltk::ValueInput* o = mFluidDensity_in = new fltk::ValueInput(380, 5, 65, 18, "Rest Density");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
-	  o->range(0.01,1.0);
-      o->step(0.1);
-	  o->value(0.1);
-	  o->callback((fltk::Callback*)cb_mFluidRad_in);
-      o->align(fltk::ALIGN_LEFT);
-      o->when(fltk::WHEN_CHANGED);
-    }
-	{fltk::ValueInput* o = mFluidDensity_in = new fltk::ValueInput(190, 25, 80, 18, "Density");
-      o->labelfont(fltk::HELVETICA_BOLD);
-      o->labelsize(13);
-	  o->range(0,100000);
-      o->step(1000);
-	  o->value(1000);
+	  o->range(0,1000);
+      o->step(10);
+	  o->value(82);
 	  o->callback((fltk::Callback*)cb_mFluidDensity_in);
       o->align(fltk::ALIGN_LEFT);
 	  o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::ValueInput* o = mFluidViscosity_in = new fltk::ValueInput(340, 25, 80, 18, "Viscosity");
+	{fltk::ValueInput* o = mFluidSurface_in = new fltk::ValueInput(225, 25, 65, 18, "Surf. Tension");
       o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->range(0,1);
-      o->step(0.001);
-	  o->value(0.001);
+      o->step(0.0001);
+	  o->value(0.0004);
+      o->callback((fltk::Callback*)cb_mFluidSurface_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	{fltk::ValueInput* o = mFluidViscosity_in = new fltk::ValueInput(380, 25, 65, 18, "Lin. Viscos.");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0,10);
+      o->step(0.1);
+	  o->value(0.5);
       o->callback((fltk::Callback*)cb_mFluidViscosity_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	{fltk::ValueInput* o = mFluidViscosity2_in = new fltk::ValueInput(560, 25, 65, 18, "Quad. Viscos.");
+      o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->range(0,10);
+      o->step(0.1);
+	  o->value(1.0);
+      o->callback((fltk::Callback*)cb_mFluidViscosity2_in);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	
+	{fltk::RadioButton* o = mFluid2D_radio = new fltk::RadioButton(160, 5, 32, 18, "2D");
+	  o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->value(true);
+	  o->callback((fltk::Callback*)cb_mFluid2D_radio);
+      o->align(fltk::ALIGN_LEFT);
+      o->when(fltk::WHEN_CHANGED);
+    }
+	{fltk::RadioButton* o = mFluid3D_radio = new fltk::RadioButton(200, 5, 32, 18, "3D");
+	  o->labelfont(fltk::HELVETICA_BOLD);
+      o->labelsize(13);
+	  o->callback((fltk::Callback*)cb_mFluid3D_radio);
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }

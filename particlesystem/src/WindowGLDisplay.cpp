@@ -137,7 +137,7 @@ void WindowGLDisplay::render()
 		glTranslatef(0, -1.5, 0);
 	}
 	else if (DataManager::gCurrentScene == SCENE_FLUID) {
-		glTranslatef(0, -2.0, -1.0);
+		glTranslatef(0, -2.0, -1.5);
 	}
 
 	// curr frame to be displayed
@@ -167,29 +167,43 @@ void WindowGLDisplay::render()
 		case SCENE_TINKERTOY: prad = 0.075;  break;
 		case SCENE_ROPE:      prad = DataManager::mCollisionEpsilon; break;
 		case SCENE_CLOTH:     prad = DataManager::mCollisionEpsilon; break;
-		case SCENE_FLUID:     prad = DataManager::mCollisionEpsilon; break;
+		case SCENE_FLUID:     prad = 0.05; break;
 	}
-	for (int i = 0; i < particles.size(); i++) {
-		glColor3f(1.0, 0.0, 0.0);
-		glPushMatrix();
-		glTranslatef(particles[i].pos[0], particles[i].pos[1], particles[i].pos[2]);
+	if (DataManager::gCurrentScene == SCENE_FLUID) {
+		glDisable(GL_LIGHTING);
+		glEnable(GL_POINT_SMOOTH);
+		glColor3f(0, 1, 1);
+		glPointSize(8);
+		glBegin(GL_POINTS);
+		for (int i = 0; i < particles.size(); i++) {
+			glVertex3f(particles[i].pos[0], particles[i].pos[1], particles[i].pos[2]);
+		}
+		glEnd();
+		glDisable(GL_POINT_SMOOTH);
+	}
+	else {
+		for (int i = 0; i < particles.size(); i++) {
+			glColor3f(1.0, 0.0, 0.0);
+			glPushMatrix();
+			glTranslatef(particles[i].pos[0], particles[i].pos[1], particles[i].pos[2]);
 		
-		if (DataManager::gCurrentScene == SCENE_TINKERTOY && i == DataManager::mSelectedParticle) {
-			glColor3f(1.0f, 1.0f, 0.0f);
-		}
-		else if (DataManager::gCurrentScene != SCENE_SNOW || DataManager::mColorParticles)
-			glColor3f(particles[i].color[0], particles[i].color[1], particles[i].color[2]);
-		else
-			glColor3f(1.0f, 1.0f, 1.0f);
+			if (DataManager::gCurrentScene == SCENE_TINKERTOY && i == DataManager::mSelectedParticle) {
+				glColor3f(1.0f, 1.0f, 0.0f);
+			}
+			else if (DataManager::gCurrentScene != SCENE_SNOW || DataManager::mColorParticles)
+				glColor3f(particles[i].color[0], particles[i].color[1], particles[i].color[2]);
+			else
+				glColor3f(1.0f, 1.0f, 1.0f);
 
-		if (DataManager::gCurrentScene != SCENE_CLOTH && DataManager::gCurrentScene != SCENE_FLUID) {
-			glutSolidSphere(prad, 8, 8);
-		}
-		else {
-			glutSolidSphere(prad, 3, 3);
-		}
+			if (DataManager::gCurrentScene != SCENE_CLOTH) {
+				glutSolidSphere(prad, 8, 8);
+			}
+			else {
+				glutSolidSphere(0.05, 3, 3);
+			}
 
-		glPopMatrix();
+			glPopMatrix();
+		}
 	}
 
 	// draw extras 
@@ -245,14 +259,24 @@ void WindowGLDisplay::render()
 	else if (DataManager::gCurrentScene == SCENE_FLUID) 
 	{
 		glDisable(GL_LIGHTING);
-		glLineWidth(1.0);
+		glLineWidth(2.0);
 		
 		glColor3f(1, 0, 0);
-		glPushMatrix();
-		glTranslatef(0, 0.5, 0);
-		glScalef(1, 0.5f, 1);
-		glutWireCube(2);
-		glPopMatrix();
+		if (DataManager::mFluid3D) {
+			glPushMatrix();
+			glTranslatef(0, 0.5, 0);
+			glScalef(1, 0.5f, 1);
+			glutWireCube(2);
+			glPopMatrix();
+		}
+		else {
+			glBegin(GL_LINE_STRIP);
+			glVertex3f(-3, 6, 0);
+			glVertex3f(-3, 0, 0);
+			glVertex3f( 3, 0, 0);
+			glVertex3f( 3, 6, 0);
+			glEnd();
+		}
 
 		glEnable(GL_LIGHTING);
 

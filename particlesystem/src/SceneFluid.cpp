@@ -27,29 +27,45 @@ void SceneFluid::init() {
 	}
 	particles.clear();
 
-	int numParticles = DataManager::mFluidParticles;
-	for (int i = 0; i < numParticles; i++) {
-		Particle *p = new Particle();
-
-		/*double rrad =   0.25*double(rand()%1024)/1024.0;
-		double rang = 2*M_PI*double(rand()%1024)/1024.0;
-		double rver =    0.8*double(rand()%1024)/1024.0;
-		p->pos   = p->prevPos = Vec3d(rrad*cos(rang), 3.0 + rver, rrad*sin(rang));*/
-		double x = -0.25 + 0.05*double(i%10);
-		double z = -0.25 + 0.05*double((i/10)%10);
-		double y =  2.50 + 0.05*double(i/100);
-		p->pos   = p->prevPos = Vec3d(x, y, z);
-		p->vel   = p->vel     = Vec3d(0,0,0);
-		p->color = Vec3f(0.2f, 1.0f, 1.0f);
-		p->mass  = 0.125;
-
-		particles.push_back(p);
-	}
+	int numParticles;
+	if (DataManager::mFluid3D) {
+		numParticles = 1000;
+		for (int i = 0; i < numParticles; i++) {
+			Particle *p = new Particle();
+			double x = -0.5 + 0.1*double(i%10);
+			double z = -0.5 + 0.1*double((i/10)%10);
+			double y =  2.5 + 0.1*double(i/100);
+			p->pos   = p->prevPos = Vec3d(x, y, z);
+			p->vel   = p->vel     = Vec3d(0,0,0);
+			p->color = Vec3f(0.2f, 1.0f, 1.0f);
+			p->mass  = 1.0;
+			particles.push_back(p);
+		}
 	
-	boxContainer = new CollisionAABB();
-	boxContainer->setPosition(Vec3d(-1.0, 0.0, -1.0));
-	boxContainer->setSize(Vec3d(2.0, 4.0, 2.0));
-	boxContainer->useInnerSide(true);
+		boxContainer = new CollisionAABB();
+		boxContainer->setPosition(Vec3d(-1.0, 0.0, -1.0));
+		boxContainer->setSize(Vec3d(2.0, 8.0, 2.0));
+		boxContainer->useInnerSide(true);
+	}
+	else {
+		numParticles = 900;
+		for (int i = 0; i < numParticles; i++) {
+			Particle *p = new Particle();
+			double x = -1.5 + 0.1*double(i%30);
+			double z =  0;
+			double y =  1.5 + 0.1*double(i/30);
+			p->pos   = p->prevPos = Vec3d(x, y, z);
+			p->vel   = p->vel     = Vec3d(0,0,0);
+			p->color = Vec3f(0.2f, 1.0f, 1.0f);
+			p->mass  = 1.0;
+			particles.push_back(p);
+		}
+	
+		boxContainer = new CollisionAABB();
+		boxContainer->setPosition(Vec3d(-3.0, 0.0, -1.0));
+		boxContainer->setSize(Vec3d(6.0, 8.0, 2.0));
+		boxContainer->useInnerSide(true);
+	}
 
 	std::vector<Particle> vparts;
 	for (int i = 0; i < numParticles; i++) {
@@ -60,90 +76,103 @@ void SceneFluid::init() {
 
 void SceneFluid::update() {
 
-	int    numParticles = particles.size();
-	double hTime        = DataManager::mTimeStep;
-	double hRadius		= DataManager::mFluidNeighborRadius;
-	double fluidDensity = DataManager::mFluidDensity;
-	double c_sound      = DataManager::mCsound;
+	int    numParticles		   = particles.size();
+	double Dt				   = DataManager::mTimeStep;
+	double hRadius			   = 0.3;
+	Vec3d  a_g				   = Vec3d(0, -DataManager::mGravityValue, 0);
+	double kPressure		   = 0.08;
+	double kPressureNear	   = 0.10;
+	double restDensity         = DataManager::mFluidRestDensity;
+	double kSurfaceTension     = DataManager::mFluidSurfaceTension;
+	double kLinearViscosity    = DataManager::mFluidLinearViscosity;
+	double kQuadraticViscosity = DataManager::mFluidQuadraticViscosity;
 
-	// find particle neighbors
-	std::vector<std::vector<int> > neighbors(numParticles);
-	findNeighbors(neighbors, hRadius);
+	int numSteps = 1;
+	for (int nstep = 0; nstep < numSteps; nstep++) {
 
-	// calculate density for each particle
-	for (int i = 0; i < numParticles; i++) {
-		Particle* pi = particles[i];
-		double density = pi->mass * W(Vec3d(0,0,0), hRadius);
-		for (int j = 0; j < neighbors[i].size(); j++) {
-			Particle *pj = particles[neighbors[i][j]];
-			density += pj->mass * W(pj->pos - pi->pos, hRadius);
-		}
-		pi->density = density;
-	}
-
-	// calculate pressure for each particle
-	double a = 7.0;
-	double b = fluidDensity*c_sound*c_sound/a;
-	std::vector<double> pressure(numParticles);
-	for (int i = 0; i < numParticles; i++) {
-		//pressure[i] = c_sound * c_sound * (particles[i]->density - fluidDensity);
-		double r = particles[i]->density/fluidDensity;
-		pressure[i] = b*(r*r*r*r*r*r*r - 1);
-	}
-
-	// calculate acceleration for each particle
-	std::vector<Vec3d> acceleration(numParticles);
-	for (int i = 0; i < numParticles; i++) {
-
-		Particle* pi = particles[i];
-
-		// pressure term
-		Vec3d a_p = Vec3d(0, 0, 0);
-		double ip = pressure[i]/(pi->density*pi->density);
-		for (int ni = 0; ni < neighbors[i].size(); ni++) {
-			int j = neighbors[i][ni];
-			Particle* pj = particles[j];
-			double Pij = pj->mass*(ip + pressure[j]/(pj->density*pj->density));
-			//a_p += -Pij*dWdx(pj->pos - pi->pos, hRadius);
+		// move particles
+		for (int i = 0; i < numParticles; i++) {
+			particles[i]->vel += a_g*Dt;
+			particles[i]->prevPos = particles[i]->pos;
+			particles[i]->pos += particles[i]->vel*Dt; 
 		}
 
-		// viscosity term
-		Vec3d a_v = Vec3d(0, 0, 0);
-		double mu = DataManager::mFluidDynamicViscosity;
-		for (int ni = 0; ni < neighbors[i].size(); ni++) {
-			int j = neighbors[i][ni];
-			Particle* pj = particles[i];
-			Vec3d Vij = mu*pj->mass*(pj->vel - pi->vel)/(pi->density*pj->density);
-			a_v += Vij*lapW(pj->pos - pi->pos, hRadius);
-			//a_v += pj->mass*(pj->vel - pi->vel)/pj->density * lapW(pi->pos - pj->pos, hRadius);
+		// find particle neighbors
+		std::vector<std::vector<int> > neighbors(numParticles);
+		findNeighbors(neighbors, hRadius);
+
+		// calculate density for each particle
+		std::vector<double> nearDensity(numParticles, 0.0);
+		for (int i = 0; i < numParticles; i++) {
+			Particle* pi = particles[i];
+			double density  = 0;
+			double ndensity = 0;
+			for (int j = 0; j < neighbors[i].size(); j++) {
+				Particle *pj = particles[neighbors[i][j]];
+				density  += pj->mass * W(pj->pos - pi->pos, hRadius);
+				ndensity += pj->mass * Wnear(pj->pos - pi->pos, hRadius);
+			}
+			pi->density = density;
+			nearDensity[i] = ndensity;
 		}
-		//a_v *= mu/pi->mass;
-		
-		// gravity term
-		Vec3d a_g = Vec3d(0, -DataManager::mGravityValue, 0);
 
-		// sum
-		acceleration[i] = a_p + a_v + a_g;
-	}
+		// calculate pressure
+		std::vector<double> P(numParticles, 0.0);
+		std::vector<double> Pnear(numParticles, 0.0);
+		for (int i = 0; i < numParticles; i++) {
+			P[i] = kPressure*(particles[i]->density - restDensity);
+			Pnear[i] = kPressureNear*nearDensity[i];
+		}
 
-	// integration step (Euler)
-	for (int i = 0; i < numParticles; i++) {
-		particles[i]->vel += acceleration[i]*hTime;
-		particles[i]->pos += particles[i]->vel*hTime;
-	}
+		// calculate relaxed positions
+		for (int i = 0; i < numParticles; i++) {
+			
+			Particle* pi = particles[i];
+			Vec3d pos = pi->pos;
 
-	// collision with the container
-	double kr  = 0.5;
-	double kt  = 1.0;
-	double eps = DataManager::mCollisionEpsilon;
-	Vec3d pos, nor;
-	for (int i = 0; i < numParticles; i++) {
-		Particle *p = particles[i];
-		if (boxContainer && boxContainer->testCollision(p, eps, pos, nor)) {
-			Vec3d velN = dot(nor, p->vel)*nor;
-			Vec3d velT = p->vel - velN;
-			p->vel = kt*velT - kr*velN;
-			p->pos = p->pos - (1 + kr)*(dot(nor, p->pos) - dot(nor, pos))*nor + eps*nor;
+			for (int j = 0; j < neighbors[i].size(); j++) {
+
+				int idj = neighbors[i][j];
+				Particle *pj = particles[idj];
+				Vec3d dx = pj->pos - pi->pos;
+				double r = len(dx);
+
+				// pressure
+				Vec3d Dp = Dt*Dt * ((Pnear[i] + Pnear[idj])*dWdxnear(dx, hRadius)/4 + (P[i] + P[idj])*dWdx(dx, hRadius)/3)/2;
+				pos -= Dp/pi->mass;
+
+				// surface tension
+				Vec3d Ds = r*kSurfaceTension/pi->mass * pj->mass*dWdx(dx, hRadius)/3.0;
+				pos += Ds;
+
+				// viscosity
+				if (r < hRadius) {
+					Vec3d dir = dx/r;
+					double u = dot(pj->vel - pi->vel, dir);
+					if (u > 0) {
+						Vec3d I = 0.5*Dt*(1.0 - r/hRadius)*(kLinearViscosity*u + kQuadraticViscosity*u*u)*dir;
+						pos -= Dt*I;
+					}
+				}
+			}
+
+			pi->pos = pos;
+			pi->vel = (pi->pos - pi->prevPos)/Dt;
+		}
+
+		// collision with the container
+		double kr  = 0.1;
+		double kt  = 0.1;
+		double eps = 0.05;
+		Vec3d pos, nor;
+		for (int i = 0; i < numParticles; i++) {
+			Particle *p = particles[i];
+			if (boxContainer && boxContainer->testCollision(p, eps, pos, nor)) {
+				Vec3d velN = dot(nor, p->vel)*nor;
+				Vec3d velT = p->vel - velN;
+				p->vel = kt*velT - kr*velN;
+				p->pos = pos + eps*nor;
+			}
 		}
 	}
 
@@ -156,51 +185,35 @@ void SceneFluid::update() {
 	DataManager::mParticles.push_back(vparts);
 }
 
+
 double SceneFluid::W(const Vec3d& x, double h) {
-	/*double q = len(x)/h;
-	double s = 8.0/(M_PI*h*h*h);
-	if (q < 0.5)	return s*(6*q*q*q - 6*q*q + 1);
-	else if (q < 1) return s*(2*(1 - q)*(1 - q)*(1 - q));
-	else			return 0;*/
-	double r = len(x);
-	if (r <= h) {
-		double s = 315.0/(64.0*M_PI*h*h*h*h*h*h*h*h*h);
-		return s*(h*h - r*r)*(h*h - r*r)*(h*h - r*r);
-	}
-	else 
-		return 0;
+	double q = std::max(1.0 - len(x)/h, 0.0);
+	return 20.0/(2*M_PI*h*h)*q*q*q;
+}
+
+double SceneFluid::Wnear(const Vec3d& x, double h) {
+	double q = std::max(1.0 - len(x)/h, 0.0);
+	return 30.0/(2*M_PI*h*h)*q*q*q*q;
 }
 
 Vec3d SceneFluid::dWdx(const Vec3d& x, double h) {
-	/*double q = len(x)/h;
-	double s = 6.0*8.0/(M_PI*h*h*h*h);
-	Vec3d  d = norm(x);
-	if (q < 0.5)	return s*(3*q*q - 2*q)*d;
-	else if (q < 1) return s*(-(1 - q)*(1 - q))*d;
-	else			return 0*d;*/
-	double r = len(x);
-	Vec3d  d = norm(x);
-	if (r <= h) {
-		double s = -945.0/(32.0*M_PI*h*h*h*h*h*h*h*h*h);
-		return s*(h*h - r*r)*(h*h - r*r)*d;
-	}
-	else 
-		return Vec3d(0, 0, 0);
+	double q = std::max(1.0 - len(x)/h, 0.0);
+	return 3*20.0/(2*M_PI*h*h)*q*q*norm(x);
+}
+
+Vec3d SceneFluid::dWdxnear(const Vec3d& x, double h) {
+	double q = std::max(1.0 - len(x)/h, 0.0);
+	return 4*30.0/(2*M_PI*h*h)*q*q*q*norm(x);
 }
 
 double SceneFluid::lapW(const Vec3d& x, double h) {
-	/*double q = len(x)/h;
-	double s = 6.0*8.0/(M_PI*h*h*h);
-	if (q < 0.5)	return s*(6*q - 2);
-	else if (q < 1) return s*(2*(1 - q));
-	else			return 0;*/
-	double r = len(x);
-	if (r <= h) {
-		double s = 945.0/(8.0*M_PI*h*h*h*h*h*h*h*h*h);
-		return s*(h*h - r*r)*(r*r - 0.75*(h*h - r*r));
-	}
-	else 
-		return 0;
+	double q = std::max(1.0 - len(x)/h, 0.0);
+	return 6*20.0/(2*M_PI*h*h)*q;
+}
+
+double SceneFluid::lapWnear(const Vec3d& x, double h) {
+	double q = std::max(1.0 - len(x)/h, 0.0);
+	return 12*30.0/(2*M_PI*h*h)*q*q;
 }
 
 void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double hLength) {

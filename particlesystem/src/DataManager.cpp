@@ -6,7 +6,7 @@ SceneType DataManager::gCurrentScene = SCENE_GALILEO;
 SceneType DataManager::gLastScene    = SCENE_GALILEO;
 bool	  DataManager::gReset		 = true;
 
-double DataManager::mTimeStep           = 0.01;
+double DataManager::mTimeStep           = 0.007;
 double DataManager::mGravityValue       = 9.81;
 double DataManager::mCoeffRestitution   = 0.8;
 double DataManager::mTangentialFriction = 0.8;
@@ -32,11 +32,11 @@ double DataManager::mSpringBallRadius = 0.5;
 bool   DataManager::mFixedCloth       = true;
 bool   DataManager::mBendingCloth     = true;
 
-int    DataManager::mFluidParticles = 1000;
-double DataManager::mFluidNeighborRadius = 0.1;
-double DataManager::mFluidDensity = 1000.0;
-double DataManager::mFluidDynamicViscosity = 0.001; 
-double DataManager::mCsound = 88.5;
+bool   DataManager::mFluid3D = false;
+double DataManager::mFluidRestDensity = 82.0;
+double DataManager::mFluidSurfaceTension = 0.0004;
+double DataManager::mFluidLinearViscosity = 0.5; 
+double DataManager::mFluidQuadraticViscosity = 1.0;
 
 Vec3d  DataManager::mCircleWireCenter = Vec3d(0,0,0);
 double DataManager::mCircleWireRadius = 1.0;
