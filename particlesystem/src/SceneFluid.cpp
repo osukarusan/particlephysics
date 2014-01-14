@@ -8,6 +8,7 @@
 SceneFluid::SceneFluid(void)
 {
 	boxContainer = NULL;
+	m_grid = NULL;
 }
 
 
@@ -67,6 +68,14 @@ void SceneFluid::init() {
 		boxContainer->setSize(Vec3d(6.0, 8.0, 2.0));
 		boxContainer->useInnerSide(true);
 	}
+
+	Vec3d s = boxContainer->getSize()/0.3;
+	int dim[3];
+	dim[0] = int(s[0] + 0.95);
+	dim[1] = int(s[1] + 0.95);
+	dim[2] = int(s[2] + 0.95);
+	if (m_grid) delete[] m_grid;
+	m_grid = new std::vector<int>[dim[0]*dim[1]*dim[2]];
 
 	std::vector<Particle> vparts;
 	for (int i = 0; i < numParticles; i++) {
@@ -231,13 +240,16 @@ void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double
 	int dy = dim[2];
 	int dz = 1;
 
-	std::map<int, std::vector<int> > grid;
+	for (int i = 0; i < nc; i++) {
+		m_grid[i].clear();
+	}
+
 	for (int i = 0; i < int(particles.size()); i++) {
 		Vec3d coords = (particles[i]->pos - bmin)/hLength;
-		int x = int(coords[0]);
-		int y = int(coords[1]);
-		int z = int(coords[2]);
-		grid[x*dx + y*dy + z*dz].push_back(i);
+		int x = min(max(int(coords[0]), 0), dim[0]-1);
+		int y = min(max(int(coords[1]), 0), dim[1]-1);
+		int z = min(max(int(coords[2]), 0), dim[2]-1);
+		m_grid[x*dx + y*dy + z*dz].push_back(i);
 	}
 
 	for (int i = 0; i < particles.size(); i++) {
@@ -251,7 +263,7 @@ void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double
 				for (int iz = -1; iz <= 1; iz++) {
 					int gid = (x + ix)*dx + (y + iy)*dy + (z + iz)*dz;
 					if (gid >= 0 && gid < nc) {
-						std::vector<int>& neighs = grid[gid];
+						std::vector<int>& neighs = m_grid[gid];
 						for (int j = 0; j < neighs.size(); j++) {
 							if (neighs[j] != i && len(p->pos - particles[neighs[j]]->pos) < hLength)
 								neighbors[i].push_back(neighs[j]);
@@ -261,5 +273,4 @@ void SceneFluid::findNeighbors(std::vector<std::vector<int> >& neighbors, double
 			}
 		}
 	}
-
 }

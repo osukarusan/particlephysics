@@ -586,7 +586,7 @@ ControlPanel::ControlPanel() {
       o->when(fltk::WHEN_CHANGED);
     }
 	
-	{fltk::RadioButton* o = mFluid2D_radio = new fltk::RadioButton(160, 5, 32, 18, "2D");
+	{fltk::RadioButton* o = mFluid2D_radio = new fltk::RadioButton(160, 5, 24, 18, "2D");
 	  o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->value(true);
@@ -594,7 +594,7 @@ ControlPanel::ControlPanel() {
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);
     }
-	{fltk::RadioButton* o = mFluid3D_radio = new fltk::RadioButton(200, 5, 32, 18, "3D");
+	{fltk::RadioButton* o = mFluid3D_radio = new fltk::RadioButton(210, 5, 32, 18, "3D");
 	  o->labelfont(fltk::HELVETICA_BOLD);
       o->labelsize(13);
 	  o->callback((fltk::Callback*)cb_mFluid3D_radio);

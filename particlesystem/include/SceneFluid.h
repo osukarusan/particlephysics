@@ -28,6 +28,7 @@ private:
 	std::vector<Particle*> particles;
 	CollisionAABB*	boxContainer;	   
 
+	std::vector<int>* m_grid;
 
 };
 
