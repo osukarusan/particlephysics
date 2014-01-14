@@ -33,8 +33,8 @@ bool   DataManager::mFixedCloth       = true;
 bool   DataManager::mBendingCloth     = true;
 
 bool   DataManager::mFluid3D = false;
-double DataManager::mFluidRestDensity = 82.0;
-double DataManager::mFluidSurfaceTension = 0.0004;
+double DataManager::mFluidRestDensity = 100.0;
+double DataManager::mFluidSurfaceTension = 0.0005;
 double DataManager::mFluidLinearViscosity = 0.5; 
 double DataManager::mFluidQuadraticViscosity = 1.0;
 

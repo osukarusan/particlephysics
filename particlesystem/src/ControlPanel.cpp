@@ -550,7 +550,7 @@ ControlPanel::ControlPanel() {
       o->labelsize(13);
 	  o->range(0,1000);
       o->step(10);
-	  o->value(82);
+	  o->value(100);
 	  o->callback((fltk::Callback*)cb_mFluidDensity_in);
       o->align(fltk::ALIGN_LEFT);
 	  o->when(fltk::WHEN_CHANGED);
@@ -560,7 +560,7 @@ ControlPanel::ControlPanel() {
       o->labelsize(13);
 	  o->range(0,1);
       o->step(0.0001);
-	  o->value(0.0004);
+	  o->value(0.0005);
       o->callback((fltk::Callback*)cb_mFluidSurface_in);
       o->align(fltk::ALIGN_LEFT);
       o->when(fltk::WHEN_CHANGED);

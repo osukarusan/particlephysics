@@ -29,12 +29,13 @@ void SceneFluid::init() {
 
 	int numParticles;
 	if (DataManager::mFluid3D) {
-		numParticles = 1000;
+		const int NP = 14;
+		numParticles = NP*NP*NP;
 		for (int i = 0; i < numParticles; i++) {
 			Particle *p = new Particle();
-			double x = -0.5 + 0.1*double(i%10);
-			double z = -0.5 + 0.1*double((i/10)%10);
-			double y =  2.5 + 0.1*double(i/100);
+			double x = -0.05*NP + 0.1*double(i%NP);
+			double z = -0.05*NP + 0.1*double((i/NP)%NP);
+			double y =  2.5 + 0.1*double(i/(NP*NP));
 			p->pos   = p->prevPos = Vec3d(x, y, z);
 			p->vel   = p->vel     = Vec3d(0,0,0);
 			p->color = Vec3f(0.2f, 1.0f, 1.0f);
